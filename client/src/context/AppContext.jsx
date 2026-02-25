@@ -65,9 +65,6 @@ export const AppContextProvider = ({ children }) => {
   };
 
   //Get Cart Total Amount
-  // const getCartAmount = () => {
-  //   let totalAmount = 0;
-  // };
   const getCartAmount = () => {
     let totalAmount = 0;
     for (const items in cartItems) {
