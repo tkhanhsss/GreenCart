@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { assets, dummyAddress } from "../assets/assets";
 
@@ -14,8 +14,8 @@ const Cart = () => {
     getCartAmount,
   } = useAppContext();
   const [cartArray, setCartArray] = useState([]);
-  const [address, setAddress] = useState(dummyAddress);
-  const [selectedAdress, setSelectedAdress] = useState(dummyAddress[0]);
+  const [addresses, setAddresses] = useState(dummyAddress);
+  const [selectedAddress, setSelectedAddress] = useState(dummyAddress[0]);
   const [paymentOption, setPaymentOption] = useState("COD");
 
   const getCart = () => {
@@ -143,8 +143,8 @@ const Cart = () => {
           <p className="text-sm font-medium uppercase">Delivery Address</p>
           <div className="relative flex justify-between items-start mt-2">
             <p className="text-gray-500">
-              {selectedAdress
-                ? `${selectedAdress.street}, ${selectedAdress.city}, ${selectedAdress.state}, ${selectedAdress.country}`
+              {selectedAddress
+                ? `${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.country}`
                 : "No address found"}
             </p>
             <button
@@ -155,16 +155,16 @@ const Cart = () => {
             </button>
             {showAddress && (
               <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
-                {addresses.map((adress, index) => (
+                {addresses.map((address, index) => (
                   <p
                     onClick={() => {
-                      setSelectedAdress(adress);
+                      setSelectedAddress(address);
                       setShowAddress(false);
                     }}
                     className="text-gray-500 p-2 hover:bg-gray-100"
                   >
-                    {adress.street}, {adress.city}, {adress.state},{" "}
-                    {adress.country}
+                    {address.street}, {address.city}, {address.state},{" "}
+                    {address.country}
                   </p>
                 ))}
                 <p
@@ -205,7 +205,7 @@ const Cart = () => {
           <p className="flex justify-between">
             <span>Tax (2%)</span>
             <span>
-              \{currency}
+              {currency}
               {(getCartAmount() * 2) / 100}
             </span>
           </p>
