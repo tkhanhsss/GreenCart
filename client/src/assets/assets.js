@@ -24,7 +24,7 @@ import main_banner_bg from "./main_banner_bg.png";
 import main_banner_bg_sm from "./main_banner_bg_sm.png";
 import bottom_banner_image from "./bottom_banner_image.png";
 import bottom_banner_image_sm from "./bottom_banner_image_sm.png";
-import add_address_iamge from "./add_address_image.svg";
+import add_address_image from "./add_address_image.svg";
 import organic_vegitable_image from "./organic_vegitable_image.png";
 import fresh_fruits_image from "./fresh_fruits_image.png";
 import bottles_image from "./bottles_image.png";
@@ -96,7 +96,7 @@ export const assets = {
   main_banner_bg_sm,
   bottom_banner_image,
   bottom_banner_image_sm,
-  add_address_iamge,
+  add_address_image,
   box_icon,
 };
 
@@ -206,8 +206,8 @@ export const dummyProducts = [
     _id: "gd46g23h",
     name: "Potato 500g",
     category: "Vegetables",
-    price: 25,
-    offerPrice: 20,
+    price: 40000,
+    offerPrice: 35000,
     image: [potato_image_1, potato_image_2, potato_image_3, potato_image_4],
     description: [
       "Fresh and organic",
@@ -222,8 +222,8 @@ export const dummyProducts = [
     _id: "gd47g34h",
     name: "Tomato 1 kg",
     category: "Vegetables",
-    price: 40,
-    offerPrice: 35,
+    price: 40000,
+    offerPrice: 35000,
     image: [tomato_image],
     description: [
       "Juicy and ripe",
@@ -239,8 +239,8 @@ export const dummyProducts = [
     _id: "gd48g45h",
     name: "Carrot 500g",
     category: "Vegetables",
-    price: 30,
-    offerPrice: 28,
+    price: 30000,
+    offerPrice: 28000,
     image: [carrot_image],
     description: [
       "Sweet and crunchy",
@@ -255,8 +255,8 @@ export const dummyProducts = [
     _id: "gd49g56h",
     name: "Spinach 500g",
     category: "Vegetables",
-    price: 18,
-    offerPrice: 15,
+    price: 18000,
+    offerPrice: 15000,
     image: [spinach_image_1],
     description: [
       "Rich in iron",
@@ -271,8 +271,8 @@ export const dummyProducts = [
     _id: "gd50g67h",
     name: "Onion 500g",
     category: "Vegetables",
-    price: 22,
-    offerPrice: 19,
+    price: 22000,
+    offerPrice: 19000,
     image: [onion_image_1],
     description: [
       "Fresh and pungent",
@@ -289,8 +289,8 @@ export const dummyProducts = [
     _id: "ek51j12k",
     name: "Apple 1 kg",
     category: "Fruits",
-    price: 120,
-    offerPrice: 110,
+    price: 120000,
+    offerPrice: 110000,
     image: [apple_image],
     description: [
       "Crisp and juicy",
@@ -307,8 +307,8 @@ export const dummyProducts = [
     _id: "ek52j23k",
     name: "Orange 1 kg",
     category: "Fruits",
-    price: 80,
-    offerPrice: 75,
+    price: 80000,
+    offerPrice: 75000,
     image: [orange_image],
     description: [
       "Juicy and sweet",
@@ -323,8 +323,8 @@ export const dummyProducts = [
     _id: "ek53j34k",
     name: "Banana 1 kg",
     category: "Fruits",
-    price: 50,
-    offerPrice: 45,
+    price: 50000,
+    offerPrice: 45000,
     image: [banana_image_1],
     description: [
       "Sweet and ripe",
@@ -340,8 +340,8 @@ export const dummyProducts = [
     name: "Mango 1 kg",
     category: "Fruits",
 
-    price: 150,
-    offerPrice: 140,
+    price: 150000,
+    offerPrice: 140000,
     image: [mango_image_1],
     description: [
       "Sweet and flavorful",
@@ -356,8 +356,8 @@ export const dummyProducts = [
     _id: "ek55j56k",
     name: "Grapes 500g",
     category: "Fruits",
-    price: 70,
-    offerPrice: 65,
+    price: 70000,
+    offerPrice: 65000,
     image: [grapes_image_1],
     description: [
       "Fresh and juicy",
@@ -374,8 +374,8 @@ export const dummyProducts = [
     _id: "ek56j67k",
     name: "Amul Milk 1L",
     category: "Dairy",
-    price: 60,
-    offerPrice: 55,
+    price: 60000,
+    offerPrice: 55000,
     image: [amul_milk_image],
     description: [
       "Pure and fresh",
@@ -391,8 +391,8 @@ export const dummyProducts = [
     _id: "ek57j78k",
     name: "Paneer 200g",
     category: "Dairy",
-    price: 90,
-    offerPrice: 85,
+    price: 90000,
+    offerPrice: 85000,
     image: [paneer_image],
     description: [
       "Soft and fresh",
@@ -407,8 +407,8 @@ export const dummyProducts = [
     _id: "ek58j89k",
     name: "Eggs 12 pcs",
     category: "Dairy",
-    price: 90,
-    offerPrice: 85,
+    price: 90000,
+    offerPrice: 85000,
     image: [eggs_image],
     description: [
       "Farm fresh",
@@ -423,8 +423,8 @@ export const dummyProducts = [
     _id: "ek59j90k",
     name: "Paneer 200g",
     category: "Dairy",
-    price: 90,
-    offerPrice: 85,
+    price: 90000,
+    offerPrice: 85000,
     image: [paneer_image_2],
     description: [
       "Soft and fresh",
@@ -439,8 +439,8 @@ export const dummyProducts = [
     _id: "ek60j01k",
     name: "Cheese 200g",
     category: "Dairy",
-    price: 140,
-    offerPrice: 130,
+    price: 140000,
+    offerPrice: 130000,
     image: [cheese_image],
     description: [
       "Creamy and delicious",
@@ -457,8 +457,8 @@ export const dummyProducts = [
     _id: "ek61j12k",
     name: "Coca-Cola 1.5L",
     category: "Drinks",
-    price: 80,
-    offerPrice: 75,
+    price: 80000,
+    offerPrice: 75000,
     image: [coca_cola_image],
     description: [
       "Refreshing and fizzy",
@@ -473,8 +473,8 @@ export const dummyProducts = [
     _id: "ek62j23k",
     name: "Pepsi 1.5L",
     category: "Drinks",
-    price: 78,
-    offerPrice: 73,
+    price: 78000,
+    offerPrice: 73000,
     image: [pepsi_image],
     description: [
       "Chilled and refreshing",
@@ -489,8 +489,8 @@ export const dummyProducts = [
     _id: "ek63j34k",
     name: "Sprite 1.5L",
     category: "Drinks",
-    price: 79,
-    offerPrice: 74,
+    price: 79000,
+    offerPrice: 74000,
     image: [sprite_image_1],
     description: [
       "Refreshing citrus taste",
@@ -505,8 +505,8 @@ export const dummyProducts = [
     _id: "ek64j45k",
     name: "Fanta 1.5L",
     category: "Drinks",
-    price: 77,
-    offerPrice: 72,
+    price: 77000,
+    offerPrice: 72000,
     image: [fanta_image_1],
     description: [
       "Sweet and fizzy",
@@ -521,8 +521,8 @@ export const dummyProducts = [
     _id: "ek65j56k",
     name: "7 Up 1.5L",
     category: "Drinks",
-    price: 76,
-    offerPrice: 71,
+    price: 76000,
+    offerPrice: 71000,
     image: [seven_up_image_1],
     description: [
       "Refreshing lemon-lime flavor",
@@ -539,8 +539,8 @@ export const dummyProducts = [
     _id: "ek66j67k",
     name: "Basmati Rice 5kg",
     category: "Grains",
-    price: 550,
-    offerPrice: 520,
+    price: 550000,
+    offerPrice: 520000,
     image: [basmati_rice_image],
     description: [
       "Long grain and aromatic",
@@ -555,8 +555,8 @@ export const dummyProducts = [
     _id: "ek67j78k",
     name: "Wheat Flour 5kg",
     category: "Grains",
-    price: 250,
-    offerPrice: 230,
+    price: 250000,
+    offerPrice: 230000,
     image: [wheat_flour_image],
     description: [
       "High-quality whole wheat",
@@ -571,8 +571,8 @@ export const dummyProducts = [
     _id: "ek68j89k",
     name: "Organic Quinoa 500g",
     category: "Grains",
-    price: 450,
-    offerPrice: 420,
+    price: 450000,
+    offerPrice: 420000,
     image: [quinoa_image],
     description: [
       "High in protein and fiber",
@@ -587,8 +587,8 @@ export const dummyProducts = [
     _id: "ek69j90k",
     name: "Brown Rice 1kg",
     category: "Grains",
-    price: 120,
-    offerPrice: 110,
+    price: 120000,
+    offerPrice: 110000,
     image: [brown_rice_image],
     description: [
       "Whole grain and nutritious",
@@ -603,8 +603,8 @@ export const dummyProducts = [
     _id: "ek70j01k",
     name: "Barley 1kg",
     category: "Grains",
-    price: 150,
-    offerPrice: 140,
+    price: 150000,
+    offerPrice: 140000,
     image: [barley_image],
     description: [
       "Rich in fiber",
@@ -621,8 +621,8 @@ export const dummyProducts = [
     _id: "bk01a24z",
     name: "Brown Bread 400g",
     category: "Bakery",
-    price: 40,
-    offerPrice: 35,
+    price: 40000,
+    offerPrice: 35000,
     image: [brown_bread_image],
     description: [
       "Soft and healthy",
@@ -637,8 +637,8 @@ export const dummyProducts = [
     _id: "bk02b30y",
     name: "Butter Croissant 100g",
     category: "Bakery",
-    price: 50,
-    offerPrice: 45,
+    price: 50000,
+    offerPrice: 45000,
     image: [butter_croissant_image],
     description: [
       "Flaky and buttery",
@@ -653,8 +653,8 @@ export const dummyProducts = [
     _id: "bk03c31x",
     name: "Chocolate Cake 500g",
     category: "Bakery",
-    price: 350,
-    offerPrice: 325,
+    price: 350000,
+    offerPrice: 325000,
     image: [chocolate_cake_image],
     description: [
       "Rich and moist",
@@ -669,8 +669,8 @@ export const dummyProducts = [
     _id: "bk04d32w",
     name: "Whole Bread 400g",
     category: "Bakery",
-    price: 45,
-    offerPrice: 40,
+    price: 45000,
+    offerPrice: 40000,
     image: [whole_wheat_bread_image],
     description: [
       "Healthy and nutritious",
@@ -685,8 +685,8 @@ export const dummyProducts = [
     _id: "bk05e33v",
     name: "Vanilla Muffins 6 pcs",
     category: "Bakery",
-    price: 100,
-    offerPrice: 90,
+    price: 100000,
+    offerPrice: 90000,
     image: [vanilla_muffins_image],
     description: [
       "Soft and fluffy",
@@ -704,8 +704,8 @@ export const dummyProducts = [
     name: "Maggi Noodles 280g",
     category: "Instant",
 
-    price: 55,
-    offerPrice: 50,
+    price: 55000,
+    offerPrice: 50000,
     image: [maggi_image],
     description: [
       "Instant and easy to cook",
@@ -720,8 +720,8 @@ export const dummyProducts = [
     _id: "in02g26t",
     name: "Top Ramen 270g",
     category: "Instant",
-    price: 45,
-    offerPrice: 40,
+    price: 45000,
+    offerPrice: 40000,
     image: [top_ramen_image],
     description: [
       "Quick and easy to prepare",
@@ -736,8 +736,8 @@ export const dummyProducts = [
     _id: "in03h27s",
     name: "Knorr Cup Soup 70g",
     category: "Instant",
-    price: 35,
-    offerPrice: 30,
+    price: 35000,
+    offerPrice: 30000,
     image: [knorr_soup_image],
     description: [
       "Convenient for on-the-go",
@@ -752,8 +752,8 @@ export const dummyProducts = [
     _id: "in04i28r",
     name: "Yippee Noodles 260g",
     category: "Instant",
-    price: 50,
-    offerPrice: 45,
+    price: 50000,
+    offerPrice: 45000,
     image: [yippee_image],
     description: [
       "Non-fried noodles for healthier choice",
@@ -768,8 +768,8 @@ export const dummyProducts = [
     _id: "in05j29q",
     name: "Oats Noodles 72g",
     category: "Instant",
-    price: 40,
-    offerPrice: 35,
+    price: 40000,
+    offerPrice: 35000,
     image: [maggi_oats_image],
     description: [
       "Healthy alternative with oats",
@@ -786,15 +786,15 @@ export const dummyAddress = [
   {
     _id: "67b5b9e54ea97f71bbc196a0",
     userId: "67b5880e4d09769c5ca61644",
-    firstName: "Great",
-    lastName: "Stack",
-    email: "user.greatstack@gmail.com",
+    firstName: "Luong",
+    lastName: "Tung Khanh",
+    email: "it.tungkhanh@gmail.com",
     street: "Street 123",
     city: "Main City",
     state: "New State",
     zipcode: 123456,
     country: "IN",
-    phone: "1234567890",
+    phone: "0945600829",
   },
 ];
 
@@ -809,7 +809,7 @@ export const dummyOrders = [
         _id: "67e2589a8f87e63366786401",
       },
     ],
-    amount: 89,
+    amount: 89000,
     address: dummyAddress[0],
     status: "Order Placed",
     paymentType: "Online",
@@ -832,7 +832,7 @@ export const dummyOrders = [
         _id: "67e258798f87e633667863f4",
       },
     ],
-    amount: 43,
+    amount: 43000,
     address: dummyAddress[0],
     status: "Order Placed",
     paymentType: "COD",

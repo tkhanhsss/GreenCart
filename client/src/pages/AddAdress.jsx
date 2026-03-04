@@ -14,15 +14,15 @@ const InputField = ({ type, placeholder, name, handleChange, address }) => (
   />
 );
 
-const AddAdress = () => {
+const AddAddress = () => {
   const [address, setAddress] = useState({
     firstName: "",
     lastName: "",
     email: "",
     street: "",
+    ward: "",
+    district: "",
     city: "",
-    state: "",
-    zipcode: "",
     country: "",
     phone: "",
   });
@@ -76,8 +76,25 @@ const AddAdress = () => {
               address={address}
               name="street"
               type="text"
-              placeholder="Street"
+              placeholder="Street Name, Building, House No."
             />
+
+            <div className="grid grid-cols-2 gap-4">
+              <InputField
+                handleChange={handleChange}
+                address={address}
+                name="ward"
+                type="text"
+                placeholder="Ward"
+              />
+              <InputField
+                handleChange={handleChange}
+                address={address}
+                name="district"
+                type="text"
+                placeholder="District"
+              />
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
               <InputField
@@ -86,23 +103,6 @@ const AddAdress = () => {
                 name="city"
                 type="text"
                 placeholder="City"
-              />
-              <InputField
-                handleChange={handleChange}
-                address={address}
-                name="state"
-                type="text"
-                placeholder="State"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <InputField
-                handleChange={handleChange}
-                address={address}
-                name="zip code"
-                type="number"
-                placeholder="Zip code"
               />
               <InputField
                 handleChange={handleChange}
@@ -136,4 +136,4 @@ const AddAdress = () => {
   );
 };
 
-export default AddAdress;
+export default AddAddress;

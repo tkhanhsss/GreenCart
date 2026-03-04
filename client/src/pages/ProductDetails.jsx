@@ -3,6 +3,7 @@ import { useAppContext } from "../context/AppContext";
 import { Link, useParams } from "react-router-dom";
 import { assets } from "../assets/assets";
 import ProductCard from "../components/ProductCard";
+import { formatCurrency } from "../utils/format";
 
 const ProductDetails = () => {
   const { products, navigate, currency, addToCart } = useAppContext();
@@ -33,7 +34,8 @@ const ProductDetails = () => {
         <p>
           <Link to={"/"}>Home</Link> /<Link to={"/products"}> Products</Link> /
           <Link to={`/products/${product.category.toLowerCase()}`}>
-            {product.category}
+            {" "}
+            {product.category}{" "}
           </Link>
           /<span className="text-primary"> {product.name}</span>
         </p>
@@ -79,12 +81,10 @@ const ProductDetails = () => {
 
             <div className="mt-6">
               <p className="text-gray-500/70 line-through">
-                MRP: {currency}
-                {product.price}
+                {formatCurrency(product.price)}
               </p>
               <p className="text-2xl font-medium">
-                MRP:{currency}
-                {product.offerPrice}
+                {formatCurrency(product.offerPrice)}
               </p>
               <span className="text-gray-500/70">(inclusive of all taxes)</span>
             </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
+import { formatCurrency } from "../utils/format";
 
 const ProductCard = ({ product }) => {
   const { currency, addToCart, removeFromCart, cartItems, navigate } =
@@ -43,11 +44,9 @@ const ProductCard = ({ product }) => {
           </div>
           <div className="flex items-end justify-between mt-3">
             <p className="md:text-xl text-base font-medium text-primary">
-              {currency}
-              {product.offerPrice}{" "}
+              {formatCurrency(product.offerPrice)}{" "}
               <span className="text-gray-500/60 md:text-sm text-xs line-through">
-                {currency}
-                {product.price}
+                {formatCurrency(product.price)}
               </span>
             </p>
             <div

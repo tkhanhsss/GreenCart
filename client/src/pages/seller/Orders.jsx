@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import { assets, dummyOrders } from "../../assets/assets";
+import { formatCurrency } from "../../utils/format";
 
 const Orders = () => {
   const { currency } = useAppContext();
@@ -57,8 +58,7 @@ const Orders = () => {
             </div>
 
             <p className="font-medium text-lg my-auto">
-              {currency}
-              {order.amount}
+              {formatCurrency(order.amount)}
             </p>
 
             <div className="flex flex-col text-sm">

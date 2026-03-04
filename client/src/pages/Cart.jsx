@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { assets, dummyAddress } from "../assets/assets";
+import { formatCurrency } from "../utils/format";
 
 const Cart = () => {
   const {
@@ -103,8 +104,7 @@ const Cart = () => {
               </div>
             </div>
             <p className="text-center">
-              {currency}
-              {product.offerPrice * product.quantity}
+              {formatCurrency(product.offerPrice * product.quantity)}
             </p>
             <button
               onClick={() => removeFromCart(product._id)}
@@ -193,10 +193,7 @@ const Cart = () => {
         <div className="text-gray-500 mt-4 space-y-2">
           <p className="flex justify-between">
             <span>Price</span>
-            <span>
-              {currency}
-              {getCartAmount()}
-            </span>
+            <span>{formatCurrency(getCartAmount())}</span>
           </p>
           <p className="flex justify-between">
             <span>Shipping Fee</span>
@@ -204,16 +201,12 @@ const Cart = () => {
           </p>
           <p className="flex justify-between">
             <span>Tax (2%)</span>
-            <span>
-              {currency}
-              {(getCartAmount() * 2) / 100}
-            </span>
+            <span>{formatCurrency((getCartAmount() * 2) / 100)}</span>
           </p>
           <p className="flex justify-between text-lg font-medium mt-3">
             <span>Total Amount:</span>
             <span>
-              {currency}
-              {getCartAmount() + (getCartAmount() * 2) / 100}
+              {formatCurrency(getCartAmount() + (getCartAmount() * 2) / 100)}
             </span>
           </p>
         </div>
