@@ -47,10 +47,10 @@ const Orders = () => {
                 {order.address.firstName} {order.address.lastName}
               </p>
               <p>
-                {order.address.street}, {order.address.city}{" "}
+                {order.address.street}, {order.address.ward}{" "}
               </p>
               <p>
-                {order.address.state}, {order.address.zipcode},{" "}
+                {order.address.district}, {order.address.city},{" "}
                 {order.address.country}
               </p>
               <p></p>

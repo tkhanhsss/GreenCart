@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { dummyOrders } from "../assets/assets";
+import { formatCurrency } from "../utils/format";
 
 const MyOrders = () => {
   const [myOders, setMyOrders] = useState([]);
@@ -29,8 +30,7 @@ const MyOrders = () => {
             <span>OrderId : {order._id}</span>
             <span>payment : {order.paymentType}</span>
             <span>
-              TotalAmount : {currency}
-              {order.amount}
+              TotalAmount : {formatCurrency(order.amount)}
             </span>
           </p>
           {order.items.map((item, index) => (
@@ -59,8 +59,7 @@ const MyOrders = () => {
                 <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
               </div>
               <p className="text-primary text-lg font-medium">
-                Amount: {currency}
-                {item.product.offerPrice * item.quantity}
+                Amount: {formatCurrency(item.product.offerPrice * item.quantity)}
               </p>
             </div>
           ))}
