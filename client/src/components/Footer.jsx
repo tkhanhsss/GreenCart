@@ -1,42 +1,30 @@
 import React from "react";
-import { assets, footerLinks } from "../assets/assets";
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTwitter, FaGithub } from "react-icons/fa";
+import { assets } from '../assets/assets.js'
 
-const Footer = () => {
+function Footer() {
   return (
-    <div className="px-6 md:px-16 lg:px-24 xl:px-32 mt-24 bg-primary/10">
-      <div className="flex flex-col md:flex-row items-start justify-between gap-10 py-10 border-b border-gray-500/30 text-gray-500">
-        <div>
-          <img className="w-34 md:w-32" src={assets.logo} alt="logo" />
-          <p className="max-w-[410px] mt-6">
-            We deliver fresh groceries and snacks straight to your door. Trusted
-            by thousands, we aim to make your shopping experience simple and
-            affordable.
-          </p>
+    <footer className="flex flex-col items-center justify-center w-full mt-18 py-10 bg-gradient-to-b from-emerald-100/10 to-emerald-200">
+        <div className="flex items-center ">
+            <img className="hover:bg-emerald-100/40 p-2 rounded-2xl cursor-pointer" src={assets.logo} alt="logo" />
         </div>
-        <div className="flex flex-wrap justify-between w-full md:w-[45%] gap-5">
-          {footerLinks.map((section, index) => (
-            <div key={index}>
-              <h3 className="font-semibold text-base text-gray-900 md:mb-5 mb-2">
-                {section.title}
-              </h3>
-              <ul className="text-sm space-y-1">
-                {section.links.map((link, i) => (
-                  <li key={i}>
-                    <a href={link.url} className="hover:underline transition">
-                      {link.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+
+        {/* Copyright */}
+        <p className="mt-4 text-center text-gray-700"> Copyright © 2025{" "}
+            <a href="#" className="underline hover:text-emerald-900"> GreenCart </a>
+            . All rights reserved.
+        </p>
+
+        {/* Social Icons */}
+        <div className="flex items-center gap-6 mt-5 text-2xl">
+            <a href="#" className="hover:-translate-y-0.5 transition-all duration-300 text-blue-600" > <FaFacebookF /> </a>
+            <a href="#" className="hover:-translate-y-0.5 transition-all duration-300 text-purple-600" > <FaInstagram /> </a>
+            <a href="#" className="hover:-translate-y-0.5 transition-all duration-300 text-blue-400" > <FaLinkedinIn /> </a>
+            <a href="#" className="hover:-translate-y-0.5 transition-all duration-300 text-sky-500" > <FaTwitter /> </a>
+            <a href="#" className="hover:-translate-y-0.5 transition-all duration-300 text-gray-700" > <FaGithub /> </a>
         </div>
-      </div>
-      <p className="py-4 text-center text-sm md:text-base text-gray-500/80">
-        Copyright {new Date().getFullYear()} © GreenCart All Right Reserved.
-      </p>
-    </div>
+    </footer>
   );
-};
+}
 
 export default Footer;

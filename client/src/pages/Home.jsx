@@ -1,21 +1,20 @@
-import React from "react";
-import MainBanner from "../components/MainBanner";
-import Categories from "../components/Categories";
-import BestSeller from "../components/BestSellers";
-import BottomBanner from "../components/BottomBanner";
-import NewsLetter from "../components/NewsLetter";
-import Footer from "../components/Footer";
+import React from 'react'
+import MainBanner from '../components/MainBanner.jsx'
+import Categories from '../components/Categories.jsx'
+import BestSeller from '../components/BestSeller.jsx'
+import BottomBanner from '../components/BottomBanner.jsx'
+import NewsLetter from '../components/NewsLetter.jsx'
 
-const Home = () => {
+function Home() {
   return (
-    <div className="mt-10">
+    <div className='mt-10'>
       <MainBanner />
       <Categories />
       <BestSeller />
       <BottomBanner />
       <NewsLetter />
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

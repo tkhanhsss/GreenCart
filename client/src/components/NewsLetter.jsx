@@ -1,28 +1,30 @@
-import React from "react";
+import React from 'react'
 
-const NewsLetter = () => {
+function NewsLetter() {
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-2 mt-24 pb-14">
-      <h1 className="md:text-4xl text-2xl font-semibold">Never Miss a Deal!</h1>
-      <p className="md:text-lg text-gray-500/70 pb-8">
-        Subscribe to get the latest offers, new arrivals, and exclusive
-        discounts
+    <div className="w-full bg-emerald-100/40 px-4 sm:px-6 lg:px-8 text-center py-12 sm:py-16 lg:py-20 flex flex-col items-center justify-center mt-6">
+      
+      {/* Heading */}
+      <p className="text-gray-600 font-bold text-xl sm:text-2xl lg:text-3xl">
+        Get Updated!
       </p>
-      <form className="flex items-center justify-between max-w-2xl w-full md:h-13 h-12">
+      <h1 className="max-w-lg font-semibold text-2xl sm:text-3xl lg:text-4xl leading-snug sm:leading-snug lg:leading-[44px] mt-3 px-2">
+        Subscribe to our Newsletter & Get the Latest News
+      </h1>
+
+      {/* Input + Button */}
+      <div className="flex flex-col sm:flex-row items-center justify-center mt-8 sm:mt-10 border border-slate-600 focus-within:outline focus-within:outline-primary text-sm rounded-full h-auto sm:h-14 max-w-md w-full overflow-hidden">
         <input
-          className="border border-gray-300 rounded-md h-full border-r-0 outline-none w-full rounded-r-none px-3 text-gray-500"
           type="text"
-          placeholder="Enter your email id"
-          required
+          className="bg-transparent outline-none px-4 py-3 sm:py-0 flex-1 text-sm sm:text-base w-full"
+          placeholder="Enter your email address"
         />
-        <button
-          type="submit"
-          className="md:px-12 px-8 h-full text-white bg-primary hover:bg-primary-dull transition-all cursor-pointer rounded-md rounded-l-none"
-        >
-          Subscribe
+        <button className="bg-primary hover:bg-primary-dull cursor-pointer text-white font-medium rounded-full h-11 px-6 sm:px-8 w-full sm:w-auto mt-3 sm:mt-0 sm:mr-1 flex items-center justify-center">
+          Subscribe Now
         </button>
-      </form>
+      </div>
     </div>
-  );
-};
-export default NewsLetter;
+  )
+}
+
+export default NewsLetter
