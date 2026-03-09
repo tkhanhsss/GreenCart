@@ -3,7 +3,7 @@ import Order from "../models/Order.js";
 import Stripe from "stripe";
 import User from "../models/User.js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+//const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Place Order COD : /api/order/cod
 export const placeOrderCOD = async (req, res) => {
