@@ -46,8 +46,8 @@ function Orders() {
                     </div>
                     <div className="text-sm md:text-base text-black/60">
                         <p className='text-black/80'>{order.address.firstName} {order.address.lastName}</p>
-                        <p>{order.address.street}, {order.address.city} </p>
-                        <p>{order.address.state}, {order.address.zipcode}, {order.address.country}</p>
+                        <p>{order.address.street}, {order.address.ward} </p>
+                        <p>{order.address.district}, {order.address.city}, {order.address.country}</p>
                         <p></p>
                         <p>{order.address.phone}</p>
                     </div>

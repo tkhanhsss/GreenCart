@@ -17,9 +17,9 @@ function AddAddress() {
         lastName: '',
         email: '',
         street: '',
+        ward: '',
+        district: '',
         city: '',
-        state: '',
-        zipcode: '',
         country: '',
         phone: ''
     });
@@ -75,16 +75,16 @@ function AddAddress() {
                         placeholder='Street' />
 
                 <div className='grid grid-cols-2 gap-4'>
-                    <InputField handleChange={handleChange} address={address} name='city' type='text'
-                        placeholder='City' />
-                    <InputField handleChange={handleChange} address={address} name='state' type='text'
-                        placeholder='State' />
+                    <InputField handleChange={handleChange} address={address} name='ward' type='text'
+                        placeholder='Ward' />
+                    <InputField handleChange={handleChange} address={address} name='district' type='text'
+                        placeholder='District' />
                     
                 </div>
 
                 <div className='grid grid-cols-2 gap-4'>
-                    <InputField handleChange={handleChange} address={address} name='zipcode' type='number'
-                        placeholder='ZipCode' />
+                    <InputField handleChange={handleChange} address={address} name='city' type='text'
+                        placeholder='City' />
                     <InputField handleChange={handleChange} address={address} name='country' type='text'
                         placeholder='Country' />
                 </div>
@@ -97,7 +97,7 @@ function AddAddress() {
                 </button>
             </form>
         </div>
-        <img className='md:mr-16 mb-12 md:mt-0' src={assets.add_address_iamge} alt='Add Address' />
+        <img className='md:mr-16 mb-12 md:mt-0' src={assets.add_address_image} alt='Add Address' />
       </div>
     </div>
   )
