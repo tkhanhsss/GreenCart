@@ -5,8 +5,11 @@ import { toast } from "react-hot-toast";
 
 const ProductCart = ({ product }) => {
   const { currency, addToCart, removeFromCart, cartItems, navigate } = useAppContext();
-
   const cartQuantity = cartItems[product._id] || 0;
+
+  const discount = product.price && product.offerPrice
+    ? Math.round(((product.price - product.offerPrice) / product.price) * 100)
+    : 0;
 
   return (
     product && (
@@ -15,53 +18,43 @@ const ProductCart = ({ product }) => {
           navigate(`/products/${product.category.toLowerCase()}/${product._id}`);
           scrollTo(0, 0);
         }}
-        className="border border-gray-500/40 rounded-md px-3 py-2 bg-gray-100 min-w-26 max-w-46 w-full"
+        className="relative bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-250 cursor-pointer overflow-hidden group"
       >
-        <div className="group cursor-pointer flex items-center justify-center px-2">
+        {/* Discount badge */}
+        {discount > 0 && (
+          <div className="absolute top-2.5 left-2.5 z-10 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md shadow-sm">
+            -{discount}%
+          </div>
+        )}
+
+        {/* Image */}
+        <div className="bg-gray-50 rounded-t-2xl flex items-center justify-center px-4 pt-4 pb-2 overflow-hidden">
           <img
-            className="group-hover:scale-105 transition max-w-26 md:max-w-36"
+            className="group-hover:scale-108 transition-transform duration-300 h-32 w-full object-contain"
             src={product.images[0]}
             alt={product.name}
           />
         </div>
-        <div className="text-gray-500/60 text-sm">
-          <p>{product.category}</p>
-          <p className="text-gray-700 font-medium text-lg truncate w-full">
-            {product.name}
-          </p>
 
-          <div className="flex items-center gap-0.5">
-            {Array(5)
-              .fill("")
-              .map((_, i) => (
-                <img
-                  key={i}
-                  src={i < 4 ? assets.star_icon : assets.star_dull_icon}
-                  className="mxd:w-3.5 w-3"
-                />
-              ))}
-            <p>(4)</p>
-          </div>
+        {/* Info */}
+        <div className="p-3.5">
+          <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide mb-0.5">{product.category}</p>
+          <p className="text-gray-800 font-semibold text-sm leading-snug truncate">{product.name}</p>
 
-          <div className="flex items-end justify-between mt-3">
-            <p className="md:text-xl text-base font-medium text-primary">
-              {currency}
-              {product.offerPrice}{" "}
-              <span className="text-gray-500/60 md:text-sm text-xs line-through">
-                {currency}
-                {product.price}
-              </span>
-            </p>
+          <div className="flex items-center justify-between mt-3">
+            <div>
+              <p className="text-primary font-bold text-base leading-none">
+                {currency}{product.offerPrice}
+              </p>
+              {product.price > product.offerPrice && (
+                <p className="text-gray-400 text-xs line-through mt-0.5">{currency}{product.price}</p>
+              )}
+            </div>
 
-            <div
-              className="text-primary"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
+            <div onClick={(e) => e.stopPropagation()}>
               {!cartQuantity ? (
                 <button
-                  className="flex items-center justify-center cursor-pointer gap-1 bg-primary/10 border border-primary/40 md:w-[80px] w-[64px] h-[34px] rounded"
+                  className="flex items-center justify-center gap-1 bg-primary text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm hover:bg-primary-dull hover:shadow-md transition-all duration-200 cursor-pointer"
                   onClick={() => {
                     if (product.quantity <= 0) {
                       toast.error("Out of stock!");
@@ -70,28 +63,24 @@ const ProductCart = ({ product }) => {
                     addToCart(product._id);
                   }}
                 >
-                  <img src={assets.cart_icon} alt="cart icon" />
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
                   Add
                 </button>
               ) : (
-                <div className="flex items-center justify-center gap-2 md:w-20 w-16 h-[34px] bg-primary/25 rounded select-none">
-                  <button
-                    onClick={() => removeFromCart(product._id)}
-                    className="cursor-pointer text-md px-2 h-full"
-                  >
-                    -
+                <div className="flex items-center gap-1.5 bg-primary/10 border border-primary/30 px-2 py-1 rounded-full select-none">
+                  <button onClick={() => removeFromCart(product._id)}
+                    className="cursor-pointer w-5 h-5 rounded-full bg-primary/20 hover:bg-primary/40 text-primary font-bold text-sm flex items-center justify-center transition-colors">
+                    −
                   </button>
-                  <span className="w-5 text-center">{cartQuantity}</span>
-                  <button
-                    onClick={() => {
-                      if (cartQuantity >= product.quantity) {
-                        toast.error("Out of stock!");
-                        return;
-                      }
-                      addToCart(product._id);
-                    }}
-                    className="cursor-pointer text-md px-2 h-full"
-                  >
+                  <span className="text-primary font-bold text-sm w-5 text-center">{cartQuantity}</span>
+                  <button onClick={() => {
+                    if (cartQuantity >= product.quantity) {
+                      toast.error("Out of stock!");
+                      return;
+                    }
+                    addToCart(product._id);
+                  }}
+                    className="cursor-pointer w-5 h-5 rounded-full bg-primary/20 hover:bg-primary/40 text-primary font-bold text-sm flex items-center justify-center transition-colors">
                     +
                   </button>
                 </div>

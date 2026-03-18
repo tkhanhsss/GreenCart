@@ -16,6 +16,8 @@ import SellerLayout from "./pages/seller/SellerLayout";
 import AddProduct from "./pages/seller/AddProduct";
 import ProductList from "./pages/seller/ProductList.jsx"
 import Orders from "./pages/seller/Orders.jsx"
+import Users from "./pages/seller/Users.jsx"
+import Categories from "./pages/seller/Categories.jsx"
 
 
 function App() {
@@ -24,11 +26,11 @@ function App() {
 
   return (
     <>
-      <div className="text-default min-h-screen text-gray-700 bg-white" >
+      <div className="text-default min-h-screen text-gray-700 bg-white flex flex-col" >
         {isSellerPath ? null : <Navbar/> }
         {showUserLogin ? <Login /> : null }
         <Toaster />
-        <div className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`}>
+        <div className={`flex-1 ${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`}>
           <Routes>
             <Route path="/" element={<Home/>} />
             <Route path="/products" element={<AllProducts/>} />
@@ -42,6 +44,8 @@ function App() {
               <Route index element={isSeller ? <AddProduct /> : null} />
               <Route path="/seller/product-list" element={<ProductList />} />
               <Route path="/seller/orders" element={<Orders />} />
+              <Route path="/seller/users" element={<Users />} />
+              <Route path="/seller/categories" element={<Categories />} />
             </Route>
           </Routes>
         </div>
