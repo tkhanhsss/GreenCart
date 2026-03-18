@@ -9,7 +9,7 @@ const AddProduct = () => {
     const [files, setFiles] = useState([]);
     const [form, setForm] = useState(INITIAL_FORM);
 
-    const { axios, categories } = useAppContext();
+    const { axios, categories, currency } = useAppContext();
 
     const handleChange = (field) => (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
@@ -115,7 +115,7 @@ const AddProduct = () => {
                             <div className="flex-1 flex flex-col gap-1.5">
                                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide" htmlFor="product-price">Original Price</label>
                                 <div className="relative">
-                                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">₫</span>
+                                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">{currency}</span>
                                     <input onChange={handleChange('price')} value={form.price}
                                         id="product-price" type="number" placeholder="0"
                                         className="outline-none py-2.5 pl-8 pr-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all text-sm w-full" required />
@@ -124,7 +124,7 @@ const AddProduct = () => {
                             <div className="flex-1 flex flex-col gap-1.5">
                                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide" htmlFor="offer-price">Sale Price</label>
                                 <div className="relative">
-                                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">₫</span>
+                                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">{currency}</span>
                                     <input onChange={handleChange('offerPrice')} value={form.offerPrice}
                                         id="offer-price" type="number" placeholder="0"
                                         className="outline-none py-2.5 pl-8 pr-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all text-sm w-full" required />

@@ -4,6 +4,12 @@ import { assets } from '../assets/assets.js'
 import { useAppContext } from '../context/AppContext.jsx'
 import toast from 'react-hot-toast'
 
+const NAV_LINKS = [
+  { label: 'Home', to: '/' },
+  { label: 'All Products', to: '/products' },
+  { label: 'Contact', to: '/' },
+];
+
 function Navbar() {
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -12,13 +18,12 @@ function Navbar() {
 
     const logout = async () => {
         try {
-            const { data } = await axios.get('/api/user/logout', { withCredentials: true });
-            if(data.success){
+            const { data } = await axios.get('/api/user/logout');
+            if (data.success) {
                 toast.success(data.message);
                 setUser(null);
                 navigate('/');
-            }
-            else{
+            } else {
                 toast.error(data.message);
             }
         } catch (error) {
@@ -48,7 +53,7 @@ function Navbar() {
 
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-7 ml-7">
-                {[{ label: 'Home', to: '/' }, { label: 'All Products', to: '/products' }, { label: 'Contact', to: '/' }].map(link => (
+                {NAV_LINKS.map(link => (
                     <NavLink key={link.label} to={link.to} className="relative group text-gray-600 hover:text-primary transition-colors duration-200 text-sm font-medium">
                         {link.label}
                         <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-primary rounded-full transition-all duration-300 group-hover:w-full" />
@@ -122,7 +127,7 @@ function Navbar() {
             {/* Mobile Menu */}
             {open && (
                 <div className="absolute top-full left-0 w-full bg-white shadow-xl border-t border-gray-100 py-5 flex flex-col gap-1 px-6 text-sm md:hidden animate-slideDown z-40">
-                    {[{ label: 'Home', to: '/' }, { label: 'All Products', to: '/products' }, { label: 'Contact', to: '/' }].map(link => (
+                    {NAV_LINKS.map(link => (
                         <NavLink key={link.label} to={link.to} onClick={() => setOpen(false)}
                             className="py-2.5 px-3 rounded-lg hover:bg-primary/10 text-gray-700 hover:text-primary font-medium transition-colors">
                             {link.label}

@@ -27,23 +27,22 @@ const Cart = () => {
                 toast.success(data.message);
                 setCartItems({});
                 navigate('/my-orders');
-            } else {
+            } else if (!data.message?.includes("account has been locked")) {
                 toast.error(data.message);
             }
         } catch (error) {
-            toast.error(error.message);
+            if (!error.message?.includes("account has been locked"))
+                toast.error(error.message);
         }
     }
 
     const getCart = () => {
-        let tempArray = [];
-        for (const key in cartItems) {
-            const product = products.find((item) => item._id === key);
-            if (product) {
-                product.quantity = cartItems[key];
-                tempArray.push(product);
-            }
-        }
+        const tempArray = Object.keys(cartItems)
+            .map(id => {
+                const product = products.find(p => p._id === id);
+                return product ? { ...product, quantity: cartItems[id] } : null;
+            })
+            .filter(Boolean);
         setCartArray(tempArray);
     }
 
@@ -57,7 +56,8 @@ const Cart = () => {
                 }
             }
         } catch (error) {
-            toast.error(error.message);
+            if (!error.message?.includes("account has been locked"))
+                toast.error(error.message);
         }
     }
 

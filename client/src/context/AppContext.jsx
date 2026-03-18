@@ -20,6 +20,21 @@ export const AppContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Force-logout when server reports account is locked
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use((response) => {
+      if (response.data?.message?.includes("account has been locked")) {
+        toast.dismiss(); // clear all existing toasts (e.g. "Added to cart")
+        setUser(null);
+        toast.error("Your account has been locked. Please contact support.", { duration: 3000 });
+        setTimeout(() => { window.location.href = '/'; }, 1500);
+      }
+      return response;
+    });
+    return () => axios.interceptors.response.eject(interceptor);
+  }, []);
+
+
   const fetchSeller = async () => {
     try {
       const { data } = await axios.get("/api/seller/is-auth");
@@ -63,7 +78,6 @@ export const AppContextProvider = ({ children }) => {
 
   const addToCart = (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: (prev[itemId] || 0) + 1 }));
-    toast.success("Added To Cart");
   };
 
   const updateCartItem = (itemId, quantity) => {
@@ -100,13 +114,22 @@ export const AppContextProvider = ({ children }) => {
     fetchCategories();
   }, []);
 
+  // Poll every 30s to detect account lock while user is idle
+  useEffect(() => {
+    if (!user) return;
+    const interval = setInterval(fetchUser, 30 * 1000);
+    return () => clearInterval(interval);
+  }, [user]);
+
   // Persist cart to DB whenever it changes
   useEffect(() => {
     if (!user) return;
     const syncCart = async () => {
       try {
         const { data } = await axios.post("/api/cart/update", { cartItems });
-        if (!data.success) toast.error(data.message);
+        // locked-account error is handled by the interceptor — skip double toast
+        if (!data.success && !data.message?.includes("account has been locked"))
+          toast.error(data.message);
       } catch (error) {
         toast.error(error.message);
       }

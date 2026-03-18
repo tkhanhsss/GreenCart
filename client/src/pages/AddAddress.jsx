@@ -36,15 +36,15 @@ function AddAddress() {
         e.preventDefault();
         try {
             const { data } = await axios.post('/api/address/add', { address, userId: user._id });
-            if(data.success){
+            if (data.success) {
                 toast.success(data.message);
                 navigate('/cart');
-            }
-            else{
+            } else if (!data.message?.includes("account has been locked")) {
                 toast.error(data.message);
             }
         } catch (error) {
-            toast.error(error.message);
+            if (!error.message?.includes("account has been locked"))
+                toast.error(error.message);
         }
     }
 
