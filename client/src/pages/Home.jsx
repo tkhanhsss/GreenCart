@@ -3,7 +3,6 @@ import MainBanner from '../components/MainBanner.jsx'
 import Categories from '../components/Categories.jsx'
 import BestSeller from '../components/BestSeller.jsx'
 import BottomBanner from '../components/BottomBanner.jsx'
-import NewsLetter from '../components/NewsLetter.jsx'
 
 function Home() {
   return (
@@ -12,7 +11,6 @@ function Home() {
       <Categories />
       <BestSeller />
       <BottomBanner />
-      <NewsLetter />
     </div>
   )
 }
