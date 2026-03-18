@@ -74,6 +74,10 @@ export const login = async (req, res) => {
     if (!user) {
       return res.json({ success: false, message: "Invalid Email or Password" });
     }
+
+    if (user.isDeleted) {
+       return res.json({ success: false, message: "Your account has been locked. Please contact support." });
+    }
     
     // 2.2 Nhờ bcrypt giải băm và so sánh mật khẩu khách gửi với mật khẩu băm trong database
     const isMatch = await bcrypt.compare(password, user.password);
@@ -137,6 +141,45 @@ export const logout = async (req, res) => {
       path: "/",
     });
     return res.json({ success: true, message: "Logged Out!" });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// ==========================================
+// LẤY DANH SÁCH USER (Seller/Admin) : /api/user/admin/users
+// ==========================================
+export const adminGetUsers = async (req, res) => {
+  try {
+    const users = await User.find({}).select("-password").sort({ createdAt: -1 });
+    res.json({ success: true, users });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// ==========================================
+// KHÓA / MỞ KHÓA USER (Seller/Admin) : /api/user/admin/toggle-delete/:id
+// ==========================================
+export const adminToggleDeleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    user.isDeleted = !user.isDeleted;
+    await user.save();
+
+    res.json({ 
+      success: true, 
+      message: `User ${user.isDeleted ? 'locked' : 'unlocked'} successfully`,
+      isDeleted: user.isDeleted 
+    });
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });

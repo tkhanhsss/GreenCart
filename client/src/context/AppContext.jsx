@@ -15,9 +15,44 @@ export const AppContextProvider = ( {children} ) => {
 
     const navigate = useNavigate();
     const [user, setUser] = useState(false);
+    
+    // Global API Interceptor for immediate frontend lockout
+    useEffect(() => {
+        const interceptor = axios.interceptors.response.use(
+            (response) => {
+                if (response.data && response.data.success === false) {
+                    const msg = response.data.message;
+                    if (msg && (msg.includes("locked") || msg === "Not Authorized")) {
+                        // Do not aggressively kick out to home screen if we are on the Seller dashboard
+                        // (Unless it's a specific 'locked' message for the admin, which is unlikely)
+                        if (msg === "Not Authorized" && window.location.pathname.startsWith('/seller')) {
+                            // Suppress the toast and redirect to avoid disrupting the seller's work
+                            return response;
+                        }
+
+                        toast.dismiss(); // Clear optimistic success toasts (like "Added to Cart")
+                        if (msg.includes("locked")) {
+                            toast.error(msg); // Show lock message only
+                        } else {
+                            // Silently log out if it's just "Not Authorized" due to cleared token
+                             toast.error("Session expired or unauthorized."); 
+                        }
+                        setUser(false);
+                        navigate('/');
+                        // Return a never-resolving promise so the caller's `.then` or `catch` skips processing.
+                        return new Promise(() => {});
+                    }
+                }
+                return response;
+            },
+            (error) => Promise.reject(error)
+        );
+        return () => axios.interceptors.response.eject(interceptor);
+    }, [navigate]);
     const [isSeller, setIsSeller] = useState(false);
     const [showUserLogin, setShowUserLogin] = useState(false);
     const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
 
     const [cartItems, setCartItems] = useState({});
     const [searchQuery, setSearchQuery] = useState({});
@@ -57,6 +92,20 @@ export const AppContextProvider = ( {children} ) => {
                 setProducts(data.products);
             }
             else{
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
+
+    // Fetch categories
+    const fetchCategories = async () => {
+        try {
+            const { data } = await axios.get('/api/category/list');
+            if (data.success) {
+                setCategories(data.categories);
+            } else {
                 toast.error(data.message);
             }
         } catch (error) {
@@ -124,6 +173,7 @@ export const AppContextProvider = ( {children} ) => {
         fetchUser();
         fetchSeller();
         fetchProducts();
+        fetchCategories();
     }, []);
 
     // Update Database Cart Items
@@ -146,7 +196,7 @@ export const AppContextProvider = ( {children} ) => {
     const value = { navigate, user, setUser, isSeller, setIsSeller, showUserLogin, setCartItems,
             setShowUserLogin, products, currency, addToCart, updateCartItem,
             removeFromCart, cartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount, axios,
-            fetchProducts, fetchUser };
+            fetchProducts, fetchUser, categories, fetchCategories };
     
     return <AppContext.Provider value={value}>
         {children}

@@ -4,7 +4,7 @@ import { assets } from '../../assets/assets.js';
 import toast from 'react-hot-toast';
 
 function Orders() {
-  const { currency, axios } = useAppContext();
+  const { currency, axios, backendUrl, fetchProducts } = useAppContext();
   const [orders, setOrders] = useState([]);
 
   const fetchOrders = async () => {
@@ -22,6 +22,23 @@ function Orders() {
     }
   }
 
+  const statusHandler = async (event, orderId) => {
+    try {
+      const { data } = await axios.post('/api/order/status', { orderId, status: event.target.value });
+      if (data.success) {
+        toast.success(data.message);
+        fetchOrders(); // Tải lại danh sách đơn hàng
+        fetchProducts(); // Tải lại số lượng Sản phẩm thực tế để update Global State
+
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  }
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -29,7 +46,7 @@ function Orders() {
   return (
     <div className='no-scrollbar flex-1 h-[95vh] overflow-y-scroll'>
         <div className="md:p-10 p-4 space-y-4">
-            <h2 className="text-lg font-medium">Orders List</h2>
+            <h2 className="pb-4 text-lg font-medium">Orders List</h2>
             {orders.map((order, index) => (
                 <div key={index} className="flex flex-col md:items-center md:flex-row gap-5 justify-between p-5 max-w-4xl rounded-md border border-gray-300">
                     <div className="flex gap-5 max-w-80">
@@ -57,6 +74,18 @@ function Orders() {
                         <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
                         <p>Payment: {order.isPaid ? "Paid" : "Pending"}</p>
                     </div>
+                    <select
+                      onChange={(event) => statusHandler(event, order._id)}
+                      value={order.status}
+                      className="p-2 border border-gray-300 rounded text-sm md:text-base cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary"
+                    >
+                      <option value="Order Placed">Order Placed</option>
+                      <option value="Packing">Packing</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Out for delivery">Out for delivery</option>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
                 </div>
             ))}
         </div>

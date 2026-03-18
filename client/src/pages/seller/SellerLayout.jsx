@@ -10,7 +10,9 @@ function SellerLayout() {
     const sidebarLinks = [
         { name: "Add Product", path: "/seller", icon: assets.add_icon },
         { name: "Product List", path: "/seller/product-list", icon: assets.product_list_icon },
+        { name: "Categories", path: "/seller/categories", icon: assets.product_list_icon },
         { name: "Orders", path: "/seller/orders", icon: assets.order_icon },
+        { name: "Users", path: "/seller/users", icon: assets.profile_icon },
     ];
 
     const logout = async () => {

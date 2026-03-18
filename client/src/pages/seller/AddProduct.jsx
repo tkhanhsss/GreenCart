@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { assets, categories } from '../../assets/assets.js'
+import { assets } from '../../assets/assets.js'
 import { useAppContext } from '../../context/AppContext.jsx'
 import toast from "react-hot-toast";
 
@@ -12,7 +12,7 @@ const AddProduct = () => {
     const [price, setPrice] = useState('');
     const [offerPrice, setOfferPrice] = useState('');
 
-    const { axios } = useAppContext();
+    const { axios, categories } = useAppContext();
 
     const onSubmitHandler = async (e) => {
         try{
@@ -84,7 +84,7 @@ const AddProduct = () => {
                          id="category" className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40">
                         <option value="">Select Category</option>
                         {categories.map((item, index) => (
-                            <option key={index} value={item.path}>{item.path}</option>
+                            <option key={index} value={item.name}>{item.name}</option>
                         ))}
                     </select>
                 </div>

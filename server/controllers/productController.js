@@ -80,26 +80,32 @@ export const changeStock = async (req, res) => {
     // Lấy ID sản phẩm và số lượng kho hàng mới
     const { id, quantity } = req.body;
 
-    if (quantity < 0) {
+    if (quantity <= 0) {
       return res.json({
         success: false,
-        message: "Quantity cannot be negative", // Số lượng không thể là số âm
+        message: "Quantity to add must be positive", // Số lượng nhập phải là số dương lớn hơn 0
       });
     }
 
     // Cập nhật CÙNG LÚC 2 giá trị trong Database:
-    // 1. Số lượng mớ (quantity)
-    // 2. inStock: Tự động đổi thành true nếu có qty > 0, và false nếu gõ số 0!
+    // 1. Số lượng mới (cộng dồn dùng $inc)
     // Trợ lý { new: true } nghĩa là: "Trả về dữ liệu MỚI cập nhật nhé, đừng trả cái cũ".
-    const updatedProduct = await Product.findByIdAndUpdate(
+    let updatedProduct = await Product.findByIdAndUpdate(
       id,
-      { quantity, inStock: quantity > 0 },
+      { $inc: { quantity: quantity } },
       { new: true },
     );
 
+    // 2. inStock: Tự động cập nhật inStock = true (vì vừa cộng lượng hàng dương)
+    // Việc này chúng ta tự code thêm dòng save cho inStock để logic không quá phức tạp trong 1 query.
+    if (updatedProduct && updatedProduct.quantity > 0 && !updatedProduct.inStock) {
+       updatedProduct.inStock = true;
+       await updatedProduct.save();
+    }
+
     res.json({
       success: true,
-      message: "Stock Updated",
+      message: "Stock Added Successfully",
       product: updatedProduct,
     });
   } catch (error) {

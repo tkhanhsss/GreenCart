@@ -14,14 +14,19 @@ export const placeOrderCOD = async (req, res) => {
       return res.json({ success: false, message: "Invalid data" });
     }
 
-    // 2. XỬ LÝ (Tính tổng tiền)
-    // Reduce: Chạy vòng lặp qua từng món hàng trong giỏ để cộng dồn tiền
-    let amount = await items.reduce(async (acc, item) => {
-      // Tìm giá cả mới nhất của sản phẩm từ Database để chống gian lận (sửa giá ảo ở front-end)
+    // 2. XỬ LÝ (Tính tổng tiền và kiểm tra tồn kho)
+    // Dùng for...of thay vì map/reduce để chờ await và có thể return sớm nếu hết hàng
+    let amount = 0;
+    for (const item of items) {
       const product = await Product.findById(item.product);
-      // Tiền = (Tiền tích luỹ cũ) + (Giá sản phẩm * Số lượng mua)
-      return (await acc) + product.offerPrice * item.quantity;
-    }, 0);
+      if (!product) {
+         return res.json({ success: false, message: "Product not found" });
+      }
+      if (product.quantity < item.quantity) {
+         return res.json({ success: false, message: `Sản phẩm ${product.name} không đủ số lượng trong kho!` });
+      }
+      amount += product.offerPrice * item.quantity;
+    }
 
     // Cộng thêm Thuế (Tax) 2% vào giá trị đơn hàng
     amount += Math.floor(amount * 0.02); 
@@ -35,6 +40,13 @@ export const placeOrderCOD = async (req, res) => {
       paymentType: "COD", // Hình thức: Trả tiền mặt (Cash On Delivery)
       isPaid: false, // Tất nhiên COD thì chưa thanh toán rồi
     });
+
+    // Trừ tồn kho đồng loạt sau khi đã tạo Đơn thành công
+    for (const item of items) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { quantity: -item.quantity }
+      });
+    }
 
     // 3. TRẢ KẾT QUẢ thành công 
     return res.json({ success: true, message: "Order placed successfully!" });
@@ -79,6 +91,45 @@ export const getAllOrders = async (req, res) => {
       .sort({ createdAt: -1 });
       
     res.json({ success: true, orders });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// ==========================================
+// CẬP NHẬT TRẠNG THÁI ĐƠN HÀNG (Dành cho Quản trị viên/Người bán) : /api/order/status
+// ==========================================
+export const updateOrderStatus = async (req, res) => {
+  try {
+    const { orderId, status } = req.body;
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.json({ success: false, message: "Order not found" });
+    }
+
+    // Nếu chuyển sang Cancelled thì hoàn trả tồn kho (chỉ hoàn khi trạng thái trước đó KHÁC Cancelled)
+    if (status === "Cancelled" && order.status !== "Cancelled") {
+       for (const item of order.items) {
+          await Product.findByIdAndUpdate(item.product, {
+             $inc: { quantity: item.quantity }
+          });
+       }
+    } 
+    // Nếu từ Cancelled quay về trạng thái khác (tuỳ logic có cho phép hay không, ở đây tạm thời trừ lại tồn kho)
+    else if (order.status === "Cancelled" && status !== "Cancelled") {
+       for (const item of order.items) {
+          await Product.findByIdAndUpdate(item.product, {
+             $inc: { quantity: -item.quantity }
+          });
+       }
+    }
+
+    order.status = status;
+    await order.save();
+
+    res.json({ success: true, message: "Status Updated" });
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });

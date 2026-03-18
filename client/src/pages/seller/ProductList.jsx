@@ -66,7 +66,7 @@ function ProductList() {
             <tbody className="text-sm text-gray-500">
               {products.map((product) => {
                 const state = editState[product._id] || {
-                  value: product.quantity,
+                  value: "",
                   editing: false,
                 };
 
@@ -85,25 +85,33 @@ function ProductList() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <input
-                          type="number"
-                          min="0"
-                          value={state.value}
-                          onChange={(e) => handleChange(product._id, e.target.value)}
-                          onFocus={() => handleEdit(product._id, product.quantity)}
-                          className="w-20 px-2 py-1 border border-gray-400 rounded outline-none text-center"
-                        />
-                        {state.editing && (
-                          <div className="flex gap-2">
+                        <span className="w-10 text-center">{product.quantity}</span>
+                        {!state.editing ? (
+                          <button
+                            onClick={() => handleEdit(product._id, "")}
+                            className="px-2 py-1 bg-green-100 text-green-700 hover:bg-green-200 cursor-pointer rounded text-xs font-medium"
+                          >
+                            + Add
+                          </button>
+                        ) : (
+                          <div className="flex gap-2 items-center">
+                            <input
+                              type="number"
+                              min="1"
+                              value={state.value}
+                              onChange={(e) => handleChange(product._id, e.target.value)}
+                              placeholder="Qty"
+                              className="w-16 px-2 py-1 border border-gray-400 rounded outline-none text-center"
+                            />
                             <button
                               onClick={() => handleUpdate(product._id)}
-                              className="px-3 py-1 bg-primary hover:bg-primary-dull text-white cursor-pointer rounded-[5px]"
+                              className="px-2 py-1 bg-primary hover:bg-primary-dull text-white cursor-pointer rounded-[5px]"
                             >
-                              Update
+                              Save
                             </button>
                             <button
-                              onClick={() => handleCancel(product._id, product.quantity)}
-                              className="px-3 py-1 bg-gray-500 text-white rounded-[5px] cursor-pointer"
+                              onClick={() => handleCancel(product._id, "")}
+                              className="px-2 py-1 bg-gray-500 text-white rounded-[5px] cursor-pointer"
                             >
                               Cancel
                             </button>

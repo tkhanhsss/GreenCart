@@ -16,6 +16,8 @@ import SellerLayout from "./pages/seller/SellerLayout";
 import AddProduct from "./pages/seller/AddProduct";
 import ProductList from "./pages/seller/ProductList.jsx"
 import Orders from "./pages/seller/Orders.jsx"
+import Users from "./pages/seller/Users.jsx"
+import Categories from "./pages/seller/Categories.jsx"
 
 
 function App() {
@@ -41,7 +43,9 @@ function App() {
             <Route path="/seller" element={isSeller ? <SellerLayout /> : <SellerLogin /> } >
               <Route index element={isSeller ? <AddProduct /> : null} />
               <Route path="/seller/product-list" element={<ProductList />} />
+              <Route path="/seller/categories" element={<Categories />} />
               <Route path="/seller/orders" element={<Orders />} />
+              <Route path="/seller/users" element={<Users />} />
             </Route>
           </Routes>
         </div>
