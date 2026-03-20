@@ -5,6 +5,7 @@ import {
   getUserOrders,
   placeOrderCOD,
   updateOrderStatus,
+  getDashboardStats,
 } from "../controllers/orderController.js";
 import authSeller from "../middlewares/authSeller.js";
 
@@ -14,5 +15,6 @@ orderRouter.post("/cod", authUser, placeOrderCOD);
 orderRouter.get("/user", authUser, getUserOrders);
 orderRouter.get("/seller", authSeller, getAllOrders);
 orderRouter.post("/status", authSeller, updateOrderStatus);
+orderRouter.get("/dashboard", authSeller, getDashboardStats);
 
 export default orderRouter;

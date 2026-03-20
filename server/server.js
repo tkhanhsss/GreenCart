@@ -11,6 +11,8 @@ import cartRouter from "./routes/cartRoute.js";
 import addressRouter from "./routes/addressRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 import categoryRouter from "./routes/categoryRoute.js";
+import warehouseRouter from "./routes/warehouseRoute.js";
+import cancellationRouter from "./routes/cancellationRoute.js";
 
 const app = express();
 
@@ -39,6 +41,8 @@ app.use("/api/cart", cartRouter);
 app.use("/api/address", addressRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/category", categoryRouter);
+app.use("/api/warehouse", warehouseRouter);
+app.use("/api/cancellation", cancellationRouter);
 
 app.listen(port, () => {
   console.log(`PORT connected on ${port}`);

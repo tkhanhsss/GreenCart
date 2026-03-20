@@ -18,6 +18,9 @@ import ProductList from "./pages/seller/ProductList.jsx"
 import Orders from "./pages/seller/Orders.jsx"
 import Users from "./pages/seller/Users.jsx"
 import Categories from "./pages/seller/Categories.jsx"
+import StockImport from "./pages/seller/StockImport.jsx"
+import CancellationVoucher from "./pages/seller/CancellationVoucher.jsx"
+import Dashboard from "./pages/seller/Dashboard.jsx"
 
 
 function App() {
@@ -41,11 +44,15 @@ function App() {
             <Route path="/my-orders" element={<MyOrders/>} />
 
             <Route path="/seller" element={isSeller ? <SellerLayout /> : <SellerLogin /> } >
-              <Route index element={isSeller ? <AddProduct /> : null} />
+              <Route index element={isSeller ? <Dashboard /> : null} />
+              <Route path="/seller/dashboard" element={<Dashboard />} />
+              <Route path="/seller/add-product" element={<AddProduct />} />
               <Route path="/seller/product-list" element={<ProductList />} />
               <Route path="/seller/orders" element={<Orders />} />
               <Route path="/seller/users" element={<Users />} />
               <Route path="/seller/categories" element={<Categories />} />
+              <Route path="/seller/stock-import" element={<StockImport />} />
+              <Route path="/seller/cancellation-voucher" element={<CancellationVoucher />} />
             </Route>
           </Routes>
         </div>

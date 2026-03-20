@@ -5,36 +5,8 @@ import { toast } from "react-hot-toast";
 function ProductList() {
   const { products, currency, axios, fetchProducts } = useAppContext();
 
-  // stockState: tracks inline edit for Stock column
-  const [stockState, setStockState] = useState({});
   // priceState: tracks inline edit for Price column
   const [priceState, setPriceState] = useState({});
-
-  /* ─── Stock handlers ─── */
-  const startStockEdit = (id, quantity) =>
-    setStockState((prev) => ({ ...prev, [id]: { value: quantity, editing: true } }));
-
-  const changeStock = (id, value) =>
-    setStockState((prev) => ({ ...prev, [id]: { ...prev[id], value } }));
-
-  const cancelStockEdit = (id, quantity) =>
-    setStockState((prev) => ({ ...prev, [id]: { value: quantity, editing: false } }));
-
-  const saveStock = async (id) => {
-    try {
-      const { value } = stockState[id];
-      const { data } = await axios.post("/api/product/stock", { id, quantity: parseInt(value, 10) });
-      if (data.success) {
-        toast.success("Stock updated");
-        setStockState((prev) => ({ ...prev, [id]: { ...prev[id], editing: false } }));
-        fetchProducts();
-      } else {
-        toast.error(data.message);
-      }
-    } catch (err) {
-      toast.error(err.message);
-    }
-  };
 
   /* ─── Price handlers ─── */
   const startPriceEdit = (id, price, offerPrice) =>
@@ -112,7 +84,6 @@ function ProductList() {
             </thead>
             <tbody className="divide-y divide-gray-50">
               {products.map((product) => {
-                const stock = stockState[product._id] || { value: product.quantity, editing: false };
                 const price = priceState[product._id] || { price: product.price, offerPrice: product.offerPrice, editing: false };
 
                 return (
@@ -195,34 +166,19 @@ function ProductList() {
                       )}
                     </td>
 
-                    {/* Stock — inline edit */}
+                    {/* Stock — read-only badge */}
                     <td className="px-5 py-4">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <div className="relative">
-                          <input
-                            type="number" min="0"
-                            value={stock.value}
-                            onChange={(e) => changeStock(product._id, e.target.value)}
-                            onFocus={() => startStockEdit(product._id, product.quantity)}
-                            className="w-20 px-3 py-1.5 text-sm border border-gray-200 rounded-xl outline-none text-center focus:border-primary focus:ring-2 focus:ring-primary/20 bg-gray-50 focus:bg-white transition-all"
-                          />
-                          {parseInt(stock.value) <= 0 && (
-                            <span className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-red-400" title="Out of stock" />
-                          )}
-                        </div>
-                        {stock.editing && (
-                          <div className="flex gap-1.5">
-                            <button onClick={() => saveStock(product._id)}
-                              className="px-3 py-1.5 bg-primary hover:bg-primary-dull text-white cursor-pointer rounded-lg text-xs font-semibold transition-colors">
-                              Save
-                            </button>
-                            <button onClick={() => cancelStockEdit(product._id, product.quantity)}
-                              className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-xs font-semibold cursor-pointer transition-colors">
-                              Cancel
-                            </button>
-                          </div>
-                        )}
-                      </div>
+                      {product.quantity > 0 ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-green-50 border border-green-100">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-400 flex-shrink-0" />
+                          <span className="text-sm font-semibold text-green-700">{product.quantity}</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-50 border border-red-100">
+                          <span className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
+                          <span className="text-xs font-semibold text-red-500">Out of Stock</span>
+                        </span>
+                      )}
                     </td>
 
                     {/* Actions — delete */}
