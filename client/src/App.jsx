@@ -14,14 +14,13 @@ import MyOrders from "./pages/MyOrders";
 import SellerLogin from "./components/seller/SellerLogin";
 import SellerLayout from "./pages/seller/SellerLayout";
 import AddProduct from "./pages/seller/AddProduct";
-import ProductList from "./pages/seller/ProductList.jsx"
-import Orders from "./pages/seller/Orders.jsx"
-import Users from "./pages/seller/Users.jsx"
-import Categories from "./pages/seller/Categories.jsx"
-import StockImport from "./pages/seller/StockImport.jsx"
-import CancellationVoucher from "./pages/seller/CancellationVoucher.jsx"
-import Dashboard from "./pages/seller/Dashboard.jsx"
-
+import ProductList from "./pages/seller/ProductList.jsx";
+import Orders from "./pages/seller/Orders.jsx";
+import Users from "./pages/seller/Users.jsx";
+import Categories from "./pages/seller/Categories.jsx";
+import StockImport from "./pages/seller/StockImport.jsx";
+import CancellationVoucher from "./pages/seller/CancellationVoucher.jsx";
+import Dashboard from "./pages/seller/Dashboard.jsx";
 
 function App() {
   const isSellerPath = useLocation().pathname.includes("seller");

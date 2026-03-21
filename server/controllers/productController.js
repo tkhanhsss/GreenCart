@@ -8,9 +8,11 @@ export const addProduct = async (req, res) => {
 
     const imageUrls = await Promise.all(
       req.files.map(async (file) => {
-        const result = await cloudinary.uploader.upload(file.path, { resource_type: "image" });
+        const result = await cloudinary.uploader.upload(file.path, {
+          resource_type: "image",
+        });
         return result.secure_url;
-      })
+      }),
     );
 
     await Product.create({ ...productData, images: imageUrls });
@@ -24,7 +26,7 @@ export const addProduct = async (req, res) => {
 // GET /api/product/list
 export const productList = async (req, res) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find({}).populate("category");
     res.json({ success: true, products });
   } catch (error) {
     console.error(error.message);
@@ -35,7 +37,7 @@ export const productList = async (req, res) => {
 // POST /api/product/id
 export const productById = async (req, res) => {
   try {
-    const product = await Product.findById(req.body.id);
+    const product = await Product.findById(req.body.id).populate("category");
     res.json({ success: true, product });
   } catch (error) {
     console.error(error.message);
@@ -49,15 +51,22 @@ export const changeStock = async (req, res) => {
     const { id, quantity } = req.body;
 
     if (quantity < 0)
-      return res.json({ success: false, message: "Quantity cannot be negative" });
+      return res.json({
+        success: false,
+        message: "Quantity cannot be negative",
+      });
 
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
-      { quantity, inStock: quantity > 0 },
-      { new: true }
+      { quantity },
+      { new: true },
     );
 
-    res.json({ success: true, message: "Stock Updated", product: updatedProduct });
+    res.json({
+      success: true,
+      message: "Stock Updated",
+      product: updatedProduct,
+    });
   } catch (error) {
     console.error(error.message);
     res.json({ success: false, message: error.message });
@@ -73,7 +82,10 @@ export const updatePrice = async (req, res) => {
       return res.json({ success: false, message: "Missing fields" });
 
     if (offerPrice > price)
-      return res.json({ success: false, message: "Sale price cannot be higher than original price" });
+      return res.json({
+        success: false,
+        message: "Sale price cannot be higher than original price",
+      });
 
     if (price <= 0 || offerPrice <= 0)
       return res.json({ success: false, message: "Prices must be positive" });
@@ -81,7 +93,7 @@ export const updatePrice = async (req, res) => {
     const updated = await Product.findByIdAndUpdate(
       id,
       { price, offerPrice },
-      { new: true }
+      { new: true },
     );
 
     res.json({ success: true, message: "Price updated", product: updated });

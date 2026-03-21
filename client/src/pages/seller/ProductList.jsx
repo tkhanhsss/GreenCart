@@ -97,7 +97,7 @@ function ProductList() {
                         </div>
                         <div className="min-w-0">
                           <p className="font-semibold text-gray-800 text-sm truncate max-w-40">{product.name}</p>
-                          <p className="text-xs text-gray-400 mt-0.5 md:hidden">{product.category}</p>
+                           <p className="text-xs text-gray-400 mt-0.5 md:hidden">{product.category?.name}</p>
                           <p className="text-xs text-primary font-medium mt-0.5 md:hidden">{currency}{product.offerPrice}</p>
                         </div>
                       </div>
@@ -105,7 +105,7 @@ function ProductList() {
 
                     {/* Category */}
                     <td className="px-5 py-4 hidden md:table-cell">
-                      <span className="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-medium">{product.category}</span>
+                      <span className="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-medium">{product.category?.name}</span>
                     </td>
 
                     {/* Price — inline edit */}
@@ -114,7 +114,7 @@ function ProductList() {
                         <div className="flex flex-col gap-1.5">
                           <div className="flex items-center gap-1.5">
                             <div className="relative">
-                              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">₫</span>
+                              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">{currency}</span>
                               <input
                                 type="number" min="1"
                                 value={price.price}
@@ -124,7 +124,7 @@ function ProductList() {
                               />
                             </div>
                             <div className="relative">
-                              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">₫</span>
+                              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">{currency}</span>
                               <input
                                 type="number" min="1"
                                 value={price.offerPrice}

@@ -17,7 +17,7 @@ function BestSeller() {
       </div>
       <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-5 lg:grid-cols-5'>
         {products
-          .filter(p => p.inStock)
+          .filter(p => p.quantity > 0)
           .sort((a, b) => {
             const discountA = (a.price - a.offerPrice) / a.price;
             const discountB = (b.price - b.offerPrice) / b.price;

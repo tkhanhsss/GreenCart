@@ -46,7 +46,9 @@ function Orders() {
       if (data.success) {
         toast.success(`Status updated to "${newStatus}"`);
         setOrders(prev =>
-          prev.map(o => o._id === orderId ? { ...o, status: newStatus } : o)
+          prev.map(o => o._id === orderId
+            ? { ...o, status: newStatus, isPaid: newStatus === "Delivered" ? true : o.isPaid }
+            : o)
         );
       } else {
         toast.error(data.message);
@@ -111,7 +113,7 @@ function Orders() {
                   </span>
 
                   {/* Amount */}
-                  <span className="font-bold text-gray-800 text-sm">{currency}{order.amount}</span>
+                  <span className="font-bold text-gray-800 text-sm">{currency}{parseFloat((order.items.reduce((sum, item) => sum + ((item.product?.offerPrice || 0) * item.quantity), 0) * 1.02).toPrecision(12))}</span>
 
                   {/* Status badge - shows saved status with color */}
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border whitespace-nowrap

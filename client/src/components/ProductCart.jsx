@@ -15,7 +15,7 @@ const ProductCart = ({ product }) => {
     product && (
       <div
         onClick={() => {
-          navigate(`/products/${product.category.toLowerCase()}/${product._id}`);
+          navigate(`/products/${product.category?.name?.toLowerCase()}/${product._id}`);
           scrollTo(0, 0);
         }}
         className="relative bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-250 cursor-pointer overflow-hidden group"
@@ -38,7 +38,7 @@ const ProductCart = ({ product }) => {
 
         {/* Info */}
         <div className="p-3.5">
-          <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide mb-0.5">{product.category}</p>
+          <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide mb-0.5">{product.category?.name}</p>
           <p className="text-gray-800 font-semibold text-sm leading-snug truncate">{product.name}</p>
 
           <div className="flex items-center justify-between mt-3">

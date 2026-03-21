@@ -127,7 +127,7 @@ function StockImport() {
                 <div className="flex items-center gap-1.5">
                   <label className="text-xs text-gray-400 whitespace-nowrap">Unit Cost ({currency})</label>
                   <input
-                    type="number" min="0" step="1"
+                    type="number" min="0" step="any"
                     value={row.unitCost}
                     onChange={(e) => updateRow(idx, "unitCost", e.target.value)}
                     className="w-28 px-3 py-2 text-sm border border-gray-200 rounded-xl outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 bg-gray-50 focus:bg-white transition-all"
@@ -217,7 +217,7 @@ function StockImport() {
                   </div>
                   <div className="flex items-center gap-4 mt-2">
                     <span className="text-xs text-gray-400">
-                      Total: <span className="font-semibold text-gray-700">{currency}{r.totalCost.toLocaleString()}</span>
+                      Total: <span className="font-semibold text-gray-700">{currency}{r.totalCost}</span>
                     </span>
                     {r.note && <span className="text-xs text-gray-400 italic truncate max-w-xs">{r.note}</span>}
                   </div>

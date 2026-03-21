@@ -14,7 +14,7 @@ const ProductDetails = () => {
 
     useEffect(() => {
         if (products.length > 0) {
-            let productsCopy = products.filter((item) => item.category === product.category);
+            let productsCopy = products.filter((item) => item.category?._id === product.category?._id);
             setRelatedProducts(productsCopy.slice(0, 5));
         }
     }, [products]);
@@ -35,7 +35,7 @@ const ProductDetails = () => {
                 <span>/</span>
                 <Link to={'/products'} className="hover:text-primary transition-colors">Products</Link>
                 <span>/</span>
-                <Link to={`/products/${product.category.toLowerCase()}`} className="hover:text-primary transition-colors">{product.category}</Link>
+                <Link to={`/products/${product.category?.name?.toLowerCase()}`} className="hover:text-primary transition-colors">{product.category?.name}</Link>
                 <span>/</span>
                 <span className="text-gray-600 font-medium truncate max-w-40">{product.name}</span>
             </nav>
@@ -124,7 +124,7 @@ const ProductDetails = () => {
                     <div className="w-16 h-0.5 bg-primary rounded-full mt-2 mx-auto" />
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 lg:grid-cols-5">
-                    {relatedProducts.filter((p) => p.inStock).map((p) => (
+                    {relatedProducts.filter((p) => p.quantity > 0).map((p) => (
                         <ProductCart key={p._id} product={p} />
                     ))}
                 </div>

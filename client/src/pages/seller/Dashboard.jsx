@@ -12,14 +12,14 @@ const STATUS_COLORS = {
 };
 
 const fmtNum = (n) =>
-  new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 20 }).format(n);
 
 const fmt = (n, currency) => `${currency}${fmtNum(n)}`;
 
 const fmtShort = (n) => {
   if (Math.abs(n) >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
   if (Math.abs(n) >= 1_000) return (n / 1_000).toFixed(0) + "K";
-  return n.toString();
+  return parseFloat(n.toFixed(1)).toString();
 };
 
 const fmtDate = (iso) =>

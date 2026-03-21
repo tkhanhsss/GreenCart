@@ -61,7 +61,7 @@ function MyOrders() {
                             </div>
                             <div className="flex items-center gap-4 flex-wrap text-xs text-gray-500">
                                 <span>📦 {order.paymentType}</span>
-                                <span className="font-bold text-gray-800">{currency}{order.amount}</span>
+                                <span className="font-bold text-gray-800">{currency}{parseFloat((order.items.reduce((sum, item) => sum + ((item.product?.offerPrice || 0) * item.quantity), 0) * 1.02).toPrecision(12))}</span>
                             </div>
                         </div>
 
@@ -75,7 +75,7 @@ function MyOrders() {
                                         </div>
                                         <div>
                                             <h2 className='text-base font-semibold text-gray-800'>{item.product.name}</h2>
-                                            <p className="text-xs text-gray-400 mt-0.5">{item.product.category}</p>
+                                            <p className="text-xs text-gray-400 mt-0.5">{item.product.category?.name}</p>
                                             <p className="text-xs text-gray-500 mt-1.5">Qty: <span className="font-medium text-gray-700">{item.quantity || 1}</span></p>
                                         </div>
                                     </div>

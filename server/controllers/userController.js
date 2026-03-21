@@ -87,11 +87,19 @@ export const logout = async (req, res) => {
   }
 };
 
-// GET /api/user/admin/users
+// GET /api/user/admin/users  — paginated
 export const adminGetUsers = async (req, res) => {
   try {
-    const users = await User.find({}).select("-password").sort({ createdAt: -1 });
-    res.json({ success: true, users });
+    const page  = Math.max(1, parseInt(req.query.page)  || 1);
+    const limit = Math.min(100, parseInt(req.query.limit) || 20);
+    const skip  = (page - 1) * limit;
+
+    const [users, total] = await Promise.all([
+      User.find({}).select("-password").sort({ createdAt: -1 }).skip(skip).limit(limit),
+      User.countDocuments({}),
+    ]);
+
+    res.json({ success: true, users, total, page, pages: Math.ceil(total / limit) });
   } catch (error) {
     console.error(error.message);
     res.json({ success: false, message: error.message });

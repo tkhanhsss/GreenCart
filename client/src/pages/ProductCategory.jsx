@@ -8,7 +8,7 @@ function ProductCategory() {
   const { category } = useParams();
 
   const heading = category.charAt(0).toUpperCase() + category.slice(1);
-  const filteredProducts = products.filter(p => p.category.toLowerCase() === category);
+  const filteredProducts = products.filter(p => p.category?.name?.toLowerCase() === category);
 
   return (
     <div className='mt-10'>

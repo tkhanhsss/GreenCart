@@ -8,7 +8,7 @@ function AllProducts() {
   const filteredProducts = useMemo(() => {
     const query = searchQuery.toLowerCase();
     return products.filter(p =>
-      p.inStock && (!query || p.name.toLowerCase().includes(query))
+      p.quantity > 0 && (!query || p.name.toLowerCase().includes(query))
     );
   }, [products, searchQuery]);
 

@@ -20,14 +20,14 @@ export const createVoucher = async (req, res) => {
     if (!items || !Array.isArray(items) || items.length === 0)
       return res.json({ success: false, message: "Items are required" });
 
-    // Validate: check stock for each item
+    // Validate stock for each item
     for (const item of items) {
       if (!item.product || !item.quantity || item.quantity < 1)
         return res.json({ success: false, message: "Invalid item data" });
 
       const product = await Product.findById(item.product);
       if (!product)
-        return res.json({ success: false, message: `Product not found` });
+        return res.json({ success: false, message: "Product not found" });
 
       if (item.quantity > product.quantity)
         return res.json({
@@ -38,7 +38,6 @@ export const createVoucher = async (req, res) => {
 
     const voucherCode = await generateVoucherCode();
 
-    // Create voucher
     const voucher = await CancellationVoucher.create({
       voucherCode,
       items,
@@ -46,16 +45,14 @@ export const createVoucher = async (req, res) => {
       status: "approved",
     });
 
-    // Deduct product quantities
-    await Promise.all(
-      items.map(async (item) => {
-        const product = await Product.findById(item.product);
-        const newQty = Math.max(0, product.quantity - item.quantity);
-        return Product.findByIdAndUpdate(item.product, {
-          quantity: newQty,
-          inStock: newQty > 0,
-        });
-      })
+    // Deduct product quantities in a single bulkWrite
+    await Product.bulkWrite(
+      items.map((item) => ({
+        updateOne: {
+          filter: { _id: item.product },
+          update: { $inc: { quantity: -item.quantity } },
+        },
+      }))
     );
 
     res.json({ success: true, message: "Cancellation voucher created", voucher });

@@ -34,7 +34,6 @@ export const AppContextProvider = ({ children }) => {
     return () => axios.interceptors.response.eject(interceptor);
   }, []);
 
-
   const fetchSeller = async () => {
     try {
       const { data } = await axios.get("/api/seller/is-auth");

@@ -2,7 +2,11 @@ import mongoose from "mongoose";
 
 const voucherItemSchema = new mongoose.Schema(
   {
-    product: { type: mongoose.Schema.Types.ObjectId, ref: "product", required: true },
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "product",
+      required: true,
+    },
     quantity: { type: Number, required: true, min: 1 },
     reason: {
       type: String,
@@ -10,7 +14,7 @@ const voucherItemSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const cancellationVoucherSchema = new mongoose.Schema(
@@ -24,8 +28,10 @@ const cancellationVoucherSchema = new mongoose.Schema(
       default: "approved",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
+
+cancellationVoucherSchema.index({ createdAt: -1 });
 
 const CancellationVoucher =
   mongoose.models.CancellationVoucher ||

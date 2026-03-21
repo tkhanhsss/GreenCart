@@ -102,7 +102,7 @@ const AddProduct = () => {
                                 className="outline-none py-2.5 px-3.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all text-sm cursor-pointer">
                                 <option value="">Select a category</option>
                                 {categories.map((item, index) => (
-                                    <option key={index} value={item.name}>{item.name}</option>
+                                    <option key={index} value={item._id}>{item.name}</option>
                                 ))}
                             </select>
                         </div>

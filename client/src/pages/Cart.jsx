@@ -1,8 +1,11 @@
 
 import { useEffect, useState } from "react";
 import { useAppContext } from '../context/AppContext.jsx';
-import { assets, dummyAddress } from "../assets/assets.js";
+import { assets } from "../assets/assets.js";
+
 import toast from "react-hot-toast";
+
+const TAX_RATE = 0.02;
 
 const Cart = () => {
     const { products, currency, cartItems, setCartItems, removeFromCart, getCartCount, updateCartItem,
@@ -95,13 +98,13 @@ const Cart = () => {
                     {cartArray.map((product, index) => (
                         <div key={index} className="grid grid-cols-[2fr_1fr_1fr] items-center py-4 px-2 hover:bg-gray-50/60 rounded-xl transition-colors">
                             <div className="flex items-center gap-4">
-                                <div onClick={() => { navigate(`/products/${product.category.toLowerCase()}/${product._id}`); scrollTo(0, 0) }}
+                                <div onClick={() => { navigate(`/products/${product.category?.name?.toLowerCase()}/${product._id}`); scrollTo(0, 0) }}
                                     className="cursor-pointer w-20 h-20 rounded-xl border border-gray-100 overflow-hidden bg-gray-50 flex items-center justify-center flex-shrink-0 hover:border-primary/30 transition-colors">
                                     <img className="max-w-full max-h-full object-contain p-1" src={product.images[0]} alt={product.name} />
                                 </div>
                                 <div>
                                     <p className="font-semibold text-gray-800 text-sm">{product.name}</p>
-                                    <p className="text-xs text-gray-400 mt-0.5">{product.category}</p>
+                                    <p className="text-xs text-gray-400 mt-0.5">{product.category?.name}</p>
                                     <div className="flex items-center gap-1.5 mt-2 text-xs text-gray-500">
                                         <span>Qty:</span>
                                         <select onChange={e => updateCartItem(product._id, Number(e.target.value))}
@@ -198,11 +201,11 @@ const Cart = () => {
                         </div>
                         <div className="flex justify-between text-gray-500">
                             <span>Tax (2%)</span>
-                            <span className="font-medium text-gray-800">{currency}{(getCartAmount() * 2 / 100).toFixed(2)}</span>
+                            <span className="font-medium text-gray-800">{currency}{parseFloat((getCartAmount() * TAX_RATE).toPrecision(12))}</span>
                         </div>
                         <div className="flex justify-between text-base font-bold text-gray-900 pt-3 border-t border-gray-100">
                             <span>Total</span>
-                            <span className="text-primary">{currency}{(getCartAmount() + getCartAmount() * 2 / 100).toFixed(2)}</span>
+                            <span className="text-primary">{currency}{parseFloat((getCartAmount() * (1 + TAX_RATE)).toPrecision(12))}</span>
                         </div>
                     </div>
 

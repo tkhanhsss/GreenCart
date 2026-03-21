@@ -6,8 +6,13 @@ const generateReceiptCode = async () => {
   const today = new Date();
   const dateStr = today.toISOString().slice(0, 10).replace(/-/g, "");
   const prefix = `IR-${dateStr}-`;
+  // Use date-range instead of regex to leverage the createdAt index
+  const startOfDay = new Date(today);
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date(today);
+  endOfDay.setHours(23, 59, 59, 999);
   const count = await WarehouseReceipt.countDocuments({
-    receiptCode: { $regex: `^${prefix}` },
+    createdAt: { $gte: startOfDay, $lte: endOfDay },
   });
   return `${prefix}${String(count + 1).padStart(3, "0")}`;
 };
@@ -49,7 +54,6 @@ export const createReceipt = async (req, res) => {
       items.map((item) =>
         Product.findByIdAndUpdate(item.product, {
           $inc: { quantity: item.quantity },
-          inStock: true,
         })
       )
     );
@@ -61,13 +65,23 @@ export const createReceipt = async (req, res) => {
   }
 };
 
-// GET /api/warehouse/receipts
+// GET /api/warehouse/receipts  — paginated
 export const listReceipts = async (req, res) => {
   try {
-    const receipts = await WarehouseReceipt.find({})
-      .populate("items.product", "name images")
-      .sort({ createdAt: -1 });
-    res.json({ success: true, receipts });
+    const page  = Math.max(1, parseInt(req.query.page)  || 1);
+    const limit = Math.min(100, parseInt(req.query.limit) || 20);
+    const skip  = (page - 1) * limit;
+
+    const [receipts, total] = await Promise.all([
+      WarehouseReceipt.find({})
+        .populate("items.product", "name images")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      WarehouseReceipt.countDocuments({}),
+    ]);
+
+    res.json({ success: true, receipts, total, page, pages: Math.ceil(total / limit) });
   } catch (error) {
     console.error(error.message);
     res.json({ success: false, message: error.message });

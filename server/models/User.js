@@ -11,6 +11,8 @@ const userSchema = new mongoose.Schema(
   { minimize: false, timestamps: true },
 );
 
+userSchema.index({ isDeleted: 1, createdAt: -1 });
+
 const User = mongoose.models.user || mongoose.model("user", userSchema);
 
 export default User;

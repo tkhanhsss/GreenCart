@@ -6,7 +6,7 @@ import {
   updatePrice,
   deleteProduct,
 } from "../controllers/productController.js";
-import { upload } from "../configs/multer.js";
+import upload from "../middlewares/multer.js";
 import authSeller from "../middlewares/authSeller.js";
 
 const productRouter = express.Router();
