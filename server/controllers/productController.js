@@ -6,6 +6,37 @@ export const addProduct = async (req, res) => {
   try {
     const productData = JSON.parse(req.body.productData);
 
+    if (
+      !productData.name ||
+      !productData.description ||
+      !productData.category ||
+      !productData.price ||
+      !productData.offerPrice
+    ) {
+      return res.json({ success: false, message: "Missing required fields" });
+    }
+
+    const price = Number(productData.price);
+    const offerPrice = Number(productData.offerPrice);
+
+    if (price <= 0 || offerPrice <= 0) {
+      return res.json({ success: false, message: "Prices must be positive" });
+    }
+
+    if (offerPrice > price) {
+      return res.json({
+        success: false,
+        message: "Sale price cannot be higher than original price",
+      });
+    }
+
+    if (!req.files || req.files.length === 0) {
+      return res.json({
+        success: false,
+        message: "At least one product image is required",
+      });
+    }
+
     const imageUrls = await Promise.all(
       req.files.map(async (file) => {
         const result = await cloudinary.uploader.upload(file.path, {

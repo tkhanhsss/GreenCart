@@ -16,10 +16,27 @@ const AddProduct = () => {
     const onSubmitHandler = async (e) => {
         try {
             e.preventDefault();
+
+            // Frontend Validation
+            if (!form.name || !form.price || !form.offerPrice || !form.category) {
+                return toast.error("Please fill in all required fields, including Category.");
+            }
+            if (Number(form.price) <= 0 || Number(form.offerPrice) <= 0) {
+                return toast.error("Prices must be positive values.");
+            }
+            if (Number(form.offerPrice) > Number(form.price)) {
+                return toast.error("Sale price cannot be greater than original price.");
+            }
+            
+            const selectedFiles = files.filter(f => f); // remove empty spots
+            if (selectedFiles.length === 0) {
+                return toast.error("Please upload at least one image.");
+            }
+
             const productData = { ...form, description: form.description.split('/n') };
             const formData = new FormData();
             formData.append('productData', JSON.stringify(productData));
-            files.forEach((file) => formData.append('images', file));
+            selectedFiles.forEach((file) => formData.append('images', file));
 
             const { data } = await axios.post('/api/product/add', formData);
             if (data.success) {

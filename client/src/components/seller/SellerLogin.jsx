@@ -16,10 +16,14 @@ function SellerLogin() {
             navigate('/seller');
           }
           else{
-            toast.error(data.message);
+            if (!data.message?.includes("account has been locked")) {
+              toast.error(data.message);
+            }
           }
         } catch (error) {
-          toast.error(error.message);
+          if (!error.response?.data?.message?.includes("account has been locked")) {
+            toast.error(error.message);
+          }
         }
     }
 

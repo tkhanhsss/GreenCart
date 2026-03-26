@@ -85,7 +85,6 @@ const ProductDetails = () => {
                                 <p className="text-lg text-gray-400 line-through">{currency}{product.price}</p>
                             )}
                         </div>
-                        <p className="text-xs text-gray-400 mt-1">Inclusive of all taxes</p>
                     </div>
 
                     {/* Description */}

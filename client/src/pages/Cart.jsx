@@ -9,7 +9,7 @@ const TAX_RATE = 0.02;
 
 const Cart = () => {
     const { products, currency, cartItems, setCartItems, removeFromCart, getCartCount, updateCartItem,
-        navigate, getCartAmount, axios, user } = useAppContext();
+        navigate, getCartAmount, axios, user, setShowUserLogin } = useAppContext();
 
     const [cartArray, setCartArray] = useState([]);
     const [addresses, setAddresses] = useState([]);
@@ -18,6 +18,9 @@ const Cart = () => {
 
     const placeOrder = async () => {
         try {
+            if (!user) {
+                return setShowUserLogin(true);
+            }
             if (!selectedAddress) {
                 return toast.error("Please select an address");
             }
@@ -76,7 +79,7 @@ const Cart = () => {
         }
     }, [user]);
 
-    return products.length > 0 && cartItems ? (
+    return products.length > 0 && getCartCount() > 0 ? (
         <div className="flex flex-col lg:flex-row mt-10 gap-8 pb-16">
 
             {/* Cart Items */}

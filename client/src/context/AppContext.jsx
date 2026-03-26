@@ -77,6 +77,7 @@ export const AppContextProvider = ({ children }) => {
 
   const addToCart = (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: (prev[itemId] || 0) + 1 }));
+    toast.success("Added to cart");
   };
 
   const updateCartItem = (itemId, quantity) => {

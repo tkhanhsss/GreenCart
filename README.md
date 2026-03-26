@@ -27,6 +27,7 @@
 ## ✨ Tính năng nổi bật
 
 ### 🛍 Giao diện khách hàng (Customer Portal)
+
 - **Quản lý tài khoản (Auth)**: Đăng nhập/Đăng ký với `JWT`. Phân quyền `authUser`.
 - **Sổ địa chỉ (Addressbook)**: Thêm, sửa, xoá nhiều địa chỉ giao hàng cho cùng một tài khoản.
 - **Trải nghiệm mua sắm**:
@@ -34,17 +35,18 @@
   - Hiển thị danh sách sản phẩm mới, bán chạy (BestSeller).
   - Quản lý **Giỏ hàng trực tuyến**: Thêm/bớt số lượng, tự động tính tiền (`Subtotal`).
   - **Checkout chi tiết**: Hỗ trợ thanh toán (`Cash on Delivery`), tính tỷ lệ Thuế (Tax Rate 2%) trực tiếp từ server để đảm bảo an toàn.
-- **Lịch sử đơn hàng**: Khách hàng theo dõi trạng thái (*Order Placed, Packing, Shipped, Out for Delivery, Delivered, Cancelled*).
+- **Lịch sử đơn hàng**: Khách hàng theo dõi trạng thái (_Order Placed, Packing, Shipped, Out for Delivery, Delivered, Cancelled_).
 
 ### 🔧 Bảng quản trị & Kho hàng (Seller/Admin Dashboard)
+
 - **Quốc gia/Phân quyền**: Truy cập đường dẫn `/seller` với xác thực `authSeller`.
 - **Quản lý sản phẩm (Products)**: Thêm mới hình ảnh lên `Cloudinary`, thiết lập giá gốc và giá khuyến mãi (`offerPrice`).
-- **Nghiệp vụ Kho Hàng chuyên sâu (Warehouse Receipts)**: 
+- **Nghiệp vụ Kho Hàng chuyên sâu (Warehouse Receipts)**:
   - Tạo phiếu nhập kho (Restock) với mã phiếu tự động `IR-YYYYMMDD-XXX`.
   - Quản lý vốn nhập hàng (`unitCost`) và số lượng tăng trực tiếp vào `Product stock`.
 - **Phiếu Hủy Sản Phẩm (Cancellation Voucher)**:
   - Khi hàng hoá bị lỗi hỏng (Damaged, Lost, Expired), tạo phiếu huỷ tự động cấp mã `CV-YYYYMMDD-XXX` để giảm tồn kho.
-- **Quản lý Đơn Hàng (Orders)**: 
+- **Quản lý Đơn Hàng (Orders)**:
   - Khấu trừ hoặc hoàn trả tự động số lượng trong kho khi trạng thái đơn thay đổi (đặc biệt khi Cancel).
 - **Phân tích Dashboard toàn diện**:
   - Giao diện thống kê doanh số (`Gross Profit`), tổng vốn nhập hàng (`importCost`), và tổng tổn thất do huỷ sản phẩm (`cancellationLoss`).
@@ -98,11 +100,11 @@ graph TD
     Cust([Khách Hàng]) -->|Duyệt, Giỏ hàng, Đặt hàng| Client[Frontend - React + Vite]
     Admin([Seller/Admin]) -->|Quản lý Kho, Sản phẩm| Client
     Client -- "HTTP Requests (Axios)" --> Server[Backend - Express API]
-    
+
     Server -->|JWT Auth & Middleware| Control[Logic Controllers]
     Control -->|CRUD & bulkWrite| DB[(MongoDB - Mongoose)]
     Control -->|Upload Images| Cloud[Cloudinary Storage]
-    
+
     subgraph Data Models
         DB --> U[User & Address]
         DB --> O[Order]
