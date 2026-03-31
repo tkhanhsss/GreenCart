@@ -43,14 +43,14 @@ export const login = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user)
-      return res.json({ success: false, message: "Invalid Email or Password" });
+      return res.json({ success: false, message: "Account does not exist" });
 
     if (user.isDeleted)
       return res.json({ success: false, message: "Your account has been locked. Please contact support." });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
-      return res.json({ success: false, message: "Invalid Email or Password" });
+      return res.json({ success: false, message: "Incorrect password" });
 
     const token = signToken({ id: user._id });
     res.cookie("userToken", token, cookieOptions(isProduction));
