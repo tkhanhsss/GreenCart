@@ -171,8 +171,7 @@ function Orders() {
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Delivery To</p>
                   <div className="text-sm text-gray-600 space-y-0.5">
                     <p className='font-medium text-gray-800'>{order.address.firstName} {order.address.lastName}</p>
-                    <p>{order.address.street}, {order.address.ward}</p>
-                    <p>{order.address.district}, {order.address.city}</p>
+                    <p>{order.address.street}, {order.address.ward}, {order.address.city}</p>
                     <p className="text-gray-400">{order.address.phone}</p>
                   </div>
                 </div>
