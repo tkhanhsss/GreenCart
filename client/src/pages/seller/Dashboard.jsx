@@ -25,15 +25,15 @@ const fmtShort = (n) => {
 const fmtDate = (iso) =>
   new Date(iso).toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
 
-/* ─── Mini SVG dual-line chart ─────────────────────────────── */
-function DualLineChart({ revenue, profit, currency }) {
+/* ─── Generic SVG dual-line chart ────────────────────────────── */
+function DualLineChart({ revenueData, profitData, labelKey, currency }) {
   const W = 480, H = 140, PAD = { t: 16, r: 16, b: 32, l: 52 };
   const cW = W - PAD.l - PAD.r;
   const cH = H - PAD.t - PAD.b;
-  const n = revenue.length;
+  const n = revenueData.length;
   if (n < 2) return null;
 
-  const allVals = [...revenue.map((d) => d.revenue), ...profit.map((d) => d.profit)];
+  const allVals = [...revenueData.map((d) => d.revenue), ...profitData.map((d) => d.profit)];
   const minV = Math.min(0, ...allVals);
   const maxV = Math.max(1, ...allVals);
   const range = maxV - minV || 1;
@@ -42,8 +42,8 @@ function DualLineChart({ revenue, profit, currency }) {
   const yOf = (v) => PAD.t + cH - ((v - minV) / range) * cH;
   const polyline = (pts) => pts.map(([x, y]) => `${x},${y}`).join(" ");
 
-  const revPoints = revenue.map((d, i) => [xOf(i), yOf(d.revenue)]);
-  const proPoints = profit.map((d, i) => [xOf(i), yOf(d.profit)]);
+  const revPoints = revenueData.map((d, i) => [xOf(i), yOf(d.revenue)]);
+  const proPoints = profitData.map((d, i) => [xOf(i), yOf(d.profit)]);
   const revFill = [[xOf(0), yOf(0)], ...revPoints, [xOf(n - 1), yOf(0)]];
   const ticks = 4;
 
@@ -70,14 +70,25 @@ function DualLineChart({ revenue, profit, currency }) {
       <polygon points={revFill.map(([x, y]) => `${x},${y}`).join(" ")} fill="url(#revGrad)" />
       <polyline points={polyline(revPoints)} fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinejoin="round" />
       <polyline points={polyline(proPoints)} fill="none" stroke="#22c55e" strokeWidth="2" strokeDasharray="4 2" strokeLinejoin="round" />
-      {revenue.map((d, i) => (
-        <text key={i} x={xOf(i)} y={H - 6} textAnchor="middle" fontSize="9" fill="#94a3b8">
-          {fmtDate(d.date)}
-        </text>
-      ))}
+      {revenueData.map((d, i) => {
+        const raw = d[labelKey];
+        const label = /^\d{4}-\d{2}-\d{2}$/.test(raw) ? fmtDate(raw) : raw;
+        return (
+          <text key={i} x={xOf(i)} y={H - 6} textAnchor="middle" fontSize="9" fill="#94a3b8">
+            {label}
+          </text>
+        );
+      })}
       {minV < 0 && (
         <line x1={PAD.l} y1={yOf(0)} x2={W - PAD.r} y2={yOf(0)} stroke="#ef4444" strokeWidth="1" strokeDasharray="3 2" opacity="0.4" />
       )}
+      {/* Dot on each data point for yearly chart (more points = smaller dots) */}
+      {n <= 12 && revPoints.map(([x, y], i) => (
+        <circle key={`rv${i}`} cx={x} cy={y} r="3" fill="#3b82f6" />
+      ))}
+      {n <= 12 && proPoints.map(([x, y], i) => (
+        <circle key={`pr${i}`} cx={x} cy={y} r="3" fill="#22c55e" />
+      ))}
     </svg>
   );
 }
@@ -122,19 +133,23 @@ function Dashboard() {
   const { axios, currency } = useAppContext();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [chartYear, setChartYear] = useState(new Date().getFullYear());
+
+  const fetchStats = async (year) => {
+    setLoading(true);
+    try {
+      const { data } = await axios.get(`/api/order/dashboard?year=${year}`);
+      if (data.success) setStats(data.stats);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await axios.get("/api/order/dashboard");
-        if (data.success) setStats(data.stats);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+    fetchStats(chartYear);
+  }, [chartYear]);
 
   if (loading) {
     return (
@@ -263,7 +278,12 @@ function Dashboard() {
                 </span>
               </div>
             </div>
-            <DualLineChart revenue={stats.revenueByDay} profit={stats.profitByDay} currency={currency} />
+            <DualLineChart
+              revenueData={stats.revenueByDay}
+              profitData={stats.profitByDay}
+              labelKey="date"
+              currency={currency}
+            />
           </div>
 
           {/* Order Status Breakdown */}
@@ -295,6 +315,62 @@ function Dashboard() {
         {/* ── Bottom Row ─────────────────────────────────────── */}
         <div className="grid md:grid-cols-2 gap-6">
 
+          {/* Yearly Revenue & Profit Chart */}
+          <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+            {/* Card header with year navigator */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
+              <div>
+                <h2 className="text-sm font-semibold text-gray-700">Revenue &amp; Profit — Yearly</h2>
+                <p className="text-xs text-gray-400 mt-0.5">12 months of {chartYear}</p>
+              </div>
+              {/* Year selector */}
+              <div className="flex items-center gap-1">
+                <button
+                  id="prev-year-btn"
+                  onClick={() => setChartYear((y) => y - 1)}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+                  title="Previous year"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <span className="text-xs font-bold text-gray-700 w-10 text-center">{chartYear}</span>
+                <button
+                  id="next-year-btn"
+                  onClick={() => setChartYear((y) => Math.min(y + 1, new Date().getFullYear()))}
+                  disabled={chartYear >= new Date().getFullYear()}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  title="Next year"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            {/* Legend */}
+            <div className="flex items-center gap-3 text-xs text-gray-400 px-5 pt-4">
+              <span className="flex items-center gap-1.5">
+                <span className="w-3 h-0.5 bg-blue-500 inline-block rounded" />
+                Revenue
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-3 h-0.5 inline-block rounded" style={{ borderTop: "2px dashed #22c55e", background: "none" }} />
+                Profit
+              </span>
+            </div>
+            {/* Chart */}
+            <div className="px-5 pb-5 pt-2">
+              <DualLineChart
+                revenueData={stats.revenueByMonth}
+                profitData={stats.profitByMonth}
+                labelKey="month"
+                currency={currency}
+              />
+            </div>
+          </div>
+
           {/* Low Stock Alerts */}
           <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
@@ -320,47 +396,6 @@ function Dashboard() {
                     }`}>
                       {p.quantity === 0 ? "Out of stock" : `${p.quantity} left`}
                     </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Recent Orders */}
-          <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
-              <h2 className="text-sm font-semibold text-gray-700">Recent Orders</h2>
-              <Link to="/seller/orders" className="text-xs text-primary font-semibold hover:underline">
-                View all →
-              </Link>
-            </div>
-            {stats.recentOrders.length === 0 ? (
-              <div className="py-8 text-center text-gray-400 text-xs">No orders yet</div>
-            ) : (
-              <div className="divide-y divide-gray-50">
-                {stats.recentOrders.map((o) => (
-                  <div key={o._id} className="flex items-center justify-between px-5 py-3 gap-3">
-                    <div className="min-w-0">
-                      <p className="text-xs font-mono font-semibold text-gray-700">
-                        #{o._id.slice(-8).toUpperCase()}
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        {o.itemCount} item{o.itemCount !== 1 ? "s" : ""} · {new Date(o.createdAt).toLocaleDateString("en-GB")}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <span className="text-sm font-bold text-gray-800">{fmt(o.amount, currency)}</span>
-                      <span
-                        className="text-xs font-semibold px-2 py-0.5 rounded-full border whitespace-nowrap"
-                        style={{
-                          backgroundColor: STATUS_COLORS[o.status] + "18",
-                          color: STATUS_COLORS[o.status],
-                          borderColor: STATUS_COLORS[o.status] + "40",
-                        }}
-                      >
-                        {o.status}
-                      </span>
-                    </div>
                   </div>
                 ))}
               </div>

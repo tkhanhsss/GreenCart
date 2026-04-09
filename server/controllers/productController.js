@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import Product from "../models/Product.js";
+import Order from "../models/Order.js";
 
 // POST /api/product/add
 export const addProduct = async (req, res) => {
@@ -140,6 +141,51 @@ export const deleteProduct = async (req, res) => {
     const { id } = req.body;
     await Product.findByIdAndDelete(id);
     res.json({ success: true, message: "Product deleted" });
+  } catch (error) {
+    console.error(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// GET /api/product/best-sellers
+export const getBestSellers = async (req, res) => {
+  try {
+    const limit = Math.min(20, parseInt(req.query.limit) || 5);
+
+    const soldAgg = await Order.aggregate([
+      { $match: { status: { $ne: "Cancelled" } } },
+      { $unwind: "$items" },
+      {
+        $group: {
+          _id: "$items.product",
+          totalSold: { $sum: "$items.quantity" },
+        },
+      },
+      { $sort: { totalSold: -1 } },
+      { $limit: limit * 3 },
+    ]);
+
+    if (soldAgg.length === 0) {
+      const fallback = await Product.find({ quantity: { $gt: 0 } })
+        .populate("category")
+        .sort({ offerPrice: 1 })
+        .limit(limit);
+      return res.json({ success: true, products: fallback, source: "fallback" });
+    }
+
+    const ids = soldAgg.map((r) => r._id);
+    const products = await Product.find({
+      _id: { $in: ids },
+      quantity: { $gt: 0 },
+    }).populate("category");
+
+    const soldMap = new Map(soldAgg.map((r) => [r._id.toString(), r.totalSold]));
+    const sorted = products
+      .map((p) => ({ ...p.toObject(), totalSold: soldMap.get(p._id.toString()) || 0 }))
+      .sort((a, b) => b.totalSold - a.totalSold)
+      .slice(0, limit);
+
+    res.json({ success: true, products: sorted, source: "sold" });
   } catch (error) {
     console.error(error.message);
     res.json({ success: false, message: error.message });

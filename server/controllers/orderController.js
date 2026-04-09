@@ -179,11 +179,16 @@ export const getDashboardStats = async (req, res) => {
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
     sevenDaysAgo.setHours(0, 0, 0, 0);
 
+    // Start of the current year for yearly chart
+    const selectedYear = parseInt(req.query.year) || new Date().getFullYear();
+    const yearStart = new Date(selectedYear, 0, 1);
+    const yearEnd = new Date(selectedYear + 1, 0, 1);
+
     // ─── Run aggregations in parallel ────────────────────────────────
     const [
       orderKpis,
-      recentOrders,
       revenueByDayAgg,
+      revenueByMonthAgg,
       lowStockProducts,
       totalUsers,
       receipts,
@@ -204,12 +209,6 @@ export const getDashboardStats = async (req, res) => {
         },
       ]),
 
-      // Recent 5 orders
-      Order.find({})
-        .sort({ createdAt: -1 })
-        .limit(5)
-        .select("amount status createdAt items paymentType isPaid"),
-
       // Last 7 days revenue by day
       Order.aggregate([
         {
@@ -221,6 +220,22 @@ export const getDashboardStats = async (req, res) => {
         {
           $group: {
             _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+            revenue: { $sum: "$amount" },
+          },
+        },
+      ]),
+
+      // Yearly revenue by month (12 months of selectedYear)
+      Order.aggregate([
+        {
+          $match: {
+            status: { $ne: "Cancelled" },
+            createdAt: { $gte: yearStart, $lt: yearEnd },
+          },
+        },
+        {
+          $group: {
+            _id: { $month: "$createdAt" },
             revenue: { $sum: "$amount" },
           },
         },
@@ -326,6 +341,47 @@ export const getDashboardStats = async (req, res) => {
       profit: (revenueMap[date] || 0) - importCostByDay[date] - lossByDay[date],
     }));
 
+    // ─── Yearly chart (12 months) ─────────────────────────────────────
+    const revenueByMonthMap = Object.fromEntries(
+      revenueByMonthAgg.map((r) => [r._id, r.revenue]),
+    );
+
+    // Import cost & cancellation loss per month
+    const importCostByMonth = {};
+    const lossByMonth = {};
+    for (let m = 1; m <= 12; m++) {
+      importCostByMonth[m] = 0;
+      lossByMonth[m] = 0;
+    }
+    for (const r of receipts) {
+      const d = new Date(r.createdAt);
+      if (d.getFullYear() === selectedYear) {
+        importCostByMonth[d.getMonth() + 1] += r.totalCost;
+      }
+    }
+    for (const v of vouchers) {
+      const d = new Date(v.createdAt);
+      if (d.getFullYear() === selectedYear) {
+        const m = d.getMonth() + 1;
+        lossByMonth[m] += v.items.reduce((s, item) => {
+          const pid = item.product?._id?.toString() ?? item.product?.toString();
+          return s + item.quantity * avgUnitCost(pid);
+        }, 0);
+      }
+    }
+
+    const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const revenueByMonthArr = Array.from({ length: 12 }, (_, i) => ({
+      month: MONTH_NAMES[i],
+      monthNum: i + 1,
+      revenue: revenueByMonthMap[i + 1] || 0,
+    }));
+    const profitByMonthArr = Array.from({ length: 12 }, (_, i) => ({
+      month: MONTH_NAMES[i],
+      monthNum: i + 1,
+      profit: (revenueByMonthMap[i + 1] || 0) - importCostByMonth[i + 1] - lossByMonth[i + 1],
+    }));
+
     // ─── Product counts ───────────────────────────────────────────────
     const [totalProducts, lowStockCount] = await Promise.all([
       Product.countDocuments({}),
@@ -349,8 +405,10 @@ export const getDashboardStats = async (req, res) => {
         statusBreakdown,
         revenueByDay: revenueByDayArr,
         profitByDay: profitByDayArr,
+        revenueByMonth: revenueByMonthArr,
+        profitByMonth: profitByMonthArr,
+        selectedYear,
         lowStockProducts,
-        recentOrders,
       },
     });
   } catch (error) {
