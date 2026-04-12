@@ -5,10 +5,10 @@
   **A scalable, RESTful MERN stack application with strict inventory management and concurrent transaction handling.**
   
   <p align="center">
-    <img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/React_(Vite)-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
     <img src="https://img.shields.io/badge/Node.js_18+-6DA55F?style=for-the-badge&logo=node.js&logoColor=white" alt="NodeJS" />
-    <img src="https://img.shields.io/badge/Express.js_5-404D59?style=for-the-badge&logo=express&logoColor=61DAFB" alt="Express" />
-    <img src="https://img.shields.io/badge/MongoDB_9-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+    <img src="https://img.shields.io/badge/Express.js-404D59?style=for-the-badge&logo=express&logoColor=61DAFB" alt="Express" />
+    <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
     <img src="https://img.shields.io/badge/Tailwind_CSS_4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
   </p>
   
@@ -28,6 +28,27 @@
 
 ---
 
+## 💡 Why This Project?
+
+This project demonstrates my ability to:
+
+- Design systems that handle real-world concurrency issues
+- Build scalable backend APIs with proper data modeling
+- Implement secure authentication using HTTP-only cookies
+
+---
+
+## 📁 Project Structure
+
+```text
+GreenCart/
+├── client/        # React frontend
+├── server/        # Express backend
+└── README.md
+```
+
+---
+
 ## 🚀 System Architecture & Technical Highlights
 
 This project tackles several complex backend and database design challenges:
@@ -36,7 +57,7 @@ This project tackles several complex backend and database design challenges:
 
 In a typical checkout scenario, multiple users might attempt to buy the last available item simultaneously.
 
-- **Solution:** Utilized MongoDB's **Atomic Operators (`$inc`)** and `bulkWrite` operations during order placement. This ensures high data integrity and strictly prevents **overselling (negative inventory)**, offloading concurrency locks directly to the database layer.
+- **Solution:** Used MongoDB **`$inc`** to safely update stock during checkout, preventing overselling when multiple users buy the same product simultaneously.
 
 ### 2. Strict Inventory Management System
 
@@ -90,8 +111,8 @@ Rather than editing the "Stock Quantity" directly (which leads to data inconsist
 
 | Frontend (Client)       | Backend (Server)    | Database & Infrastructure      |
 | ----------------------- | ------------------- | ------------------------------ |
-| **React 19** (Vite)     | **Node.js 18+**     | **MongoDB / Mongoose 9**       |
-| **React Router v7**     | **Express.js 5**    | **Cloudinary** (Image CDN)     |
+| **React** (Vite)        | **Node.js 18+**     | **MongoDB / Mongoose**         |
+| **React Router v7**     | **Express.js**      | **Cloudinary** (Image CDN)     |
 | **Tailwind CSS 4**      | **JWT** (HTTP-Only) | Render / Vercel (CI/CD)        |
 | Axios, Hot Toast, Icons | Bcrypt.js, Multer   | RESTful API Design             |
 
@@ -131,6 +152,15 @@ erDiagram
 ---
 
 ## 🔌 API Endpoints Summary
+
+### Example:
+
+- `POST /api/order/create`  
+  → Create a new order with stock validation
+- `GET /api/order/revenue`  
+  → Get 7-day revenue analytics
+
+### Full API:
 
 - **`/api/user/*`**: Client Auth, Profile settings, List users (Admin only).
 - **`/api/seller/*`**: Admin Dashboard login & authorization middleware checks.
