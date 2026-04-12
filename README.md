@@ -1,170 +1,212 @@
-# 🛒 GreenCart - Nền tảng Thương mại Điện tử Fullstack (MERN)
-
-<p align="center">
-  <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React" />
-  <img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white" alt="NodeJS" />
-  <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB" alt="Express.js" />
-  <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
-  <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="TailwindCSS" />
-</p>
-
-<p align="center">
-  <a href="#-live-demo"><strong>Live Demo</strong></a> ·
-  <a href="#-điểm-nhấn-kỹ-thuật-chính"><strong>Điểm nhấn Kỹ thuật</strong></a> ·
-  <a href="#-kiến-trúc-hệ-thống--cơ-sở-dữ-liệu"><strong>Kiến trúc & CSDL</strong></a> ·
-  <a href="#-hướng-dẫn-cài-đặt-(local)"><strong>Cài đặt</strong></a>
-</p>
-
----
-
-## 📖 Giới thiệu Dự án
-
-**GreenCart** là ứng dụng thương mại điện tử fullstack được xây dựng theo kiến trúc RESTful API trên nền tảng **MERN Stack**. Dự án phân tách rõ ràng thành hai luồng trải nghiệm: **Khách hàng (Customer)** mua sắm trực tuyến, và **Trang quản trị (Admin/Seller Dashboard)** giúp quản lý sản phẩm, đơn hàng, kho bãi và theo dõi hiệu suất kinh doanh qua biểu đồ.
-
-**Mục tiêu xây dựng:** Vận dụng các kiến thức thực tế về thiết kế hệ thống, quản lý state phức tạp trên SPA, và giải quyết các bài toán hóc búa của hệ thống thương mại điện tử như: tránh race condition khi cập nhật tồn kho, bảo mật xác thực (authentication) và xử lý dữ liệu lớn để làm báo cáo.
+<div align="center">
+  
+  # 🛒 GreenCart - Full-stack E-Commerce Platform
+  
+  **A scalable, RESTful MERN stack application with strict inventory management and concurrent transaction handling.**
+  
+  <p align="center">
+    <img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/Node.js_18+-6DA55F?style=for-the-badge&logo=node.js&logoColor=white" alt="NodeJS" />
+    <img src="https://img.shields.io/badge/Express.js_5-404D59?style=for-the-badge&logo=express&logoColor=61DAFB" alt="Express" />
+    <img src="https://img.shields.io/badge/MongoDB_9-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS_4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
+    <img src="https://img.shields.io/badge/Stripe-626CD9?style=for-the-badge&logo=Stripe&logoColor=white" alt="Stripe" />
+  </p>
+  
+  <!-- <a href="#-live-demo"><strong>Live Demo</strong></a> · -->
+  <a href="#-technical-highlights--architecture"><strong>Architecture & Insights</strong></a> ·
+  <a href="#-key-features"><strong>Features</strong></a> ·
+  <a href="#-getting-started-local-setup"><strong>Setup</strong></a>
+</div>
 
 ---
 
-## 🚀 Điểm nhấn Kỹ thuật (Technical Highlights)
+## 📖 Introduction
 
-Đây là những giải pháp kỹ thuật cốt lõi giúp GreenCart trở thành một ứng dụng ổn định và sẵn sàng mở rộng:
+**GreenCart** is a modern e-commerce platform built to demonstrate advanced system design and full-stack development best practices. It features two distinct portals: a seamless **Customer Shopping Experience** and a robust **Admin/Seller Dashboard** for logistics, inventory, and sales analytics.
 
-- **Xử lý Đồng thời (Concurrency & Race Conditions):** Sử dụng hàm `bulkWrite` kết hợp toán tử Atomic (`$inc`) trong MongoDB để thực hiện trừ/trả tồn kho. Đảm bảo tính nhất quán dữ liệu (Data Integrity) và ngăn ngừa tình trạng bán vượt mức (Overselling) khi nhiều người dùng cùng thanh toán một lúc.
-- **Tối ưu Tính toán Thống kê (Data Aggregation):** Áp dụng **MongoDB Aggregation Pipelines** phức tạp (`$match`, `$group`, `$project`, `$sort`) để phân tích doanh thu, lợi nhuận gộp theo chu kỳ (7 ngày, 12 tháng), lọc sản phẩm bán chạy/sắp hết hàng. Đẩy toàn bộ tác vụ tính toán nặng xuống Database thay vì xử lý trên Node.js Thread Pool.
-- **Cơ chế Nhập/Hủy Kho Thực tế:** Xây dựng tính năng quản lý kho bài bản bằng **Phiếu Nhập (Warehouse Receipt)** và **Phiếu Hủy (Cancellation Voucher)**. Tồn kho biến động dựa trên các chứng từ này thay vì Admin tự sửa số. Hệ thống tính toán chính xác giá vốn trung bình và trừ hao phí tổn thất để ra báo cáo lợi nhuận thực tế.
-- **Bảo mật & Xác thực Hai Phân Hệ:** Cấp phát phân quyền JWT độc lập giữa `User` và `Seller`. Token được đóng gói an toàn trong **HTTP-Only Cookies**, triệt tiêu nguy cơ bị tấn công XSS. Thiết lập Axios Interceptors toàn cục tại Client để bắt lỗi 401/403, tự động điều hướng và xóa state khi phiên hết hạn.
-- **Tối ưu Trải nghiệm CSDL Address:** Sử dụng cấu trúc thông minh cho Sổ địa chỉ người dùng theo chuẩn sát nhập hành chính tại VN (chia cấp Tỉnh/Thành phố & Phường/Xã), bóc tách thành một bảng `Address` riêng biệt và dùng cơ chế `ref` trong Order thay vì nhúng tĩnh.
+**Context:** Designed not just as a typical CRUD application, but as a system capable of handling real-world business challenges such as **race conditions** in checkout, **secure token policies**, and **complex database aggregations** for financial reporting.
 
 ---
 
-## 📸 Giao diện Trực quan
+## 🚀 Technical Highlights & Architecture (Recommended for Reviewers)
 
-| Trải nghiệm Khách hàng (Customer Portal) | Trang Quản trị viên (Admin Dashboard) |
-| :---: | :---: |
-| ![Khách hàng](./client/src/assets/Customer.png) | ![Admin](./client/src/assets/Admin.png) |
+This project tackles several complex backend and database design challenges:
 
----
+### 1. Concurrency Control & Race Conditions Prevention
 
-## ✨ Tính năng Nổi bật
+In a typical checkout scenario, multiple users might attempt to buy the last available item simultaneously.
 
-### 🛍 Khách hàng (Customer Portal)
-- Xác thực đăng nhập qua mật khẩu băm bằng **Bcrypt**, giỏ hàng tự động đồng bộ thời gian thực.
-- **Sổ địa chỉ thông minh:** Quản lý nhiều địa chỉ giao hàng, tích hợp API Open API VN để chọn Tỉnh/Thành & Phường/Xã với logic sắp xếp chữ cái tiếng Việt.
-- Cơ chế Giỏ hàng (Cart) linh hoạt, hỗ trợ cộng dồn, tự động tính thuế suất và quy đổi để thanh toán COD.
-- Theo dõi tiến độ vận chuyển đơn hàng 5 trạng thái chuyên nghiệp (*Placed → Packing → Shipped → Out for Delivery → Delivered / Cancelled*).
+- **Solution:** Utilized MongoDB's **Atomic Operators (`$inc`)** and `bulkWrite` operations during order placement. This ensures high data integrity and strictly prevents **overselling (negative inventory)**, offloading concurrency locks directly to the database layer.
 
-### 🔧 Quản trị viên (Admin/Seller Dashboard)
-- **Kiểm soát Sản phẩm & Danh mục:** CRUD với hình ảnh đẩy trực tiếp lên Cloud CDN (**Cloudinary**) thông qua Middleware **Multer**.
-- **Quản trị Đơn hàng:** Đồng bộ trạng thái giao hàng, tự động hoàn trả số lượng (Refund Stock) cực kỳ an toàn nếu đơn chuyển sang trạng thái "Cancelled".
-- **Biểu đồ thời gian thực:** Cung cấp biểu đồ trực quan (Recharts / Chart.js) trực tiếp từ API Aggregation.
-- Quản lý tài khoản: Chức năng khóa người dùng (Soft-delete/Ban) cập nhật cưỡng chế ngắt kết nối User đang online.
+### 2. Strict Inventory Management System
 
----
+Rather than editing the "Stock Quantity" directly (which leads to data inconsistency over time), inventory mutations are strictly governed by **Documents**.
 
-## 🛠 Công nghệ Sử dụng
+- **Implementation:** Real-world approach using **Warehouse Receipts** (Stock In) and **Cancellation Vouchers** (Stock Out / Damages / Expired). The system aggregates these documents to determine live inventory accurately.
 
-| Frontend (Client) | Backend (Server) | Database & Khác |
-| ----------------- | ---------------- | --------------- |
-| React 19 (Vite)   | Node.js ≥ 18     | MongoDB / Mongoose 9 |
-| React Router v7   | Express.js 5     | Cloudinary (Image CDN) |
-| Tailwind CSS 4    | JWT Auth         | Render / Vercel (CI/CD) |
-| Axios / React Hot Toast | Bcryptjs / Mutler | GitHub Actions |
+### 3. Data Aggregations for Analytics
+
+- Moved expensive runtime calculations from the Node.js event loop to **MongoDB Aggregation Pipelines**.
+- Utilized multi-stage pipelines (`$match`, `$unwind`, `$group`, `$project`, `$sort`) to fetch 7-day revenue trends, daily profit margins, and dynamic best-seller filtering efficiently.
+
+### 4. JWT Authentication Security
+
+- Implemented dual-role architecture (`User` vs `Seller`).
+- Tokens are stored solely in **HTTP-Only Cookies** to mitigate XSS (Cross-Site Scripting) attacks, while employing global Axios Interceptors on the frontend for automatic 401/403 forced session termination.
+
+### 5. Smart Address Sourcing
+
+- Instead of static strings, user shipping addresses are stored via references. Handled cascading address data dynamically. Ensures robust order state preservation even if user deletes their saved locations.
 
 ---
 
-## 🏗 Kiến trúc Hệ thống & Cơ sở dữ liệu
+## 📸 UI / UX Showcase
 
-**Mô hình Dữ liệu Chính:**
+|                   Customer Portal                   |           Admin / Seller Dashboard            |
+| :-------------------------------------------------: | :-------------------------------------------: |
+| ![Customer Panel](./client/src/assets/Customer.png) | ![Admin Panel](./client/src/assets/Admin.png) |
+
+---
+
+## ✨ Key Features
+
+### 🛍️ Customer Portal
+
+- **Authentication:** Secure registration & login via Bcrypt hashing.
+- **Smart Checkout:** Synchronized shopping cart, automatic price & shipping fee calculation, COD & **Stripe** payment integration.
+- **Address Book Management:** Users can manage multiple shipping addresses via a normalized structural format (integrated with API for real-time validation).
+- **Order Tracking:** 5-tier dynamic workflow (`Placed` → `Packing` → `Shipped` → `Out for Delivery` → `Delivered / Cancelled`).
+
+### 🔧 Admin Dashboard
+
+- **Catalog Management:** Full CRUD operations for Products and Categories. Image uploads are processed via **Multer** and directly streamed to **Cloudinary CDN**.
+- **Order Fulfillment:** Sellers can update orders and trigger automatic **Stock Refunds** for "Cancelled" orders.
+- **Sales Analytics:** Real-time visual charts powered by customized Backend APIs.
+- **Account Moderation:** Dashboard to monitor user bases and apply soft-deletes/bans to malicious accounts.
+
+---
+
+## 🛠️ Technology Stack
+
+| Frontend (Client)       | Backend (Server)    | Database & Infrastructure      |
+| ----------------------- | ------------------- | ------------------------------ |
+| **React 19** (Vite)     | **Node.js 18+**     | **MongoDB / Mongoose 9**       |
+| **React Router v7**     | **Express.js 5**    | **Cloudinary** (Image CDN)     |
+| **Tailwind CSS 4**      | **JWT** (HTTP-Only) | **Stripe API** (Payments)      |
+| Axios, Hot Toast, Icons | Bcrypt.js, Multer   | Render / Vercel (CI/CD Deploy) |
+
+---
+
+## 🏗️ Entity Relationship Diagram
+
 ```mermaid
 erDiagram
-    User ||--o{ Address : "1:N"
-    User ||--o{ Order : "1:N"
-    Order }o--|| Address : "ref"
-    Order }o--|{ Product : "items[]"
-    Product }o--|| Category : "ref"
-    WarehouseReceipt }o--|{ Product : "items[]"
-    CancellationVoucher }o--|{ Product : "items[]"
+    USER ||--o{ ADDRESS : "has many"
+    USER ||--o{ ORDER : "places"
+    ORDER }o--|| ADDRESS : "ships to (ref)"
+    ORDER }o--|{ PRODUCT : "contains items"
+    PRODUCT }o--|| CATEGORY : "belongs to"
+    WAREHOUSE_RECEIPT }o--|{ PRODUCT : "restocks"
+    CANCELLATION_VOUCHER }o--|{ PRODUCT : "removes stock"
 
-    User {
+    USER {
         string email
         string password
         boolean isDeleted
     }
-    Product {
+    PRODUCT {
         string name
         number price
         ObjectId category
         number quantity
     }
-    Order {
+    ORDER {
         ObjectId userId
         array items
         number amount
         string status
-        boolean isPaid
     }
 ```
 
-**Mô tả Luồng Thiết kế:**
-1. **User ↔ Address**: Mỗi KH có nhiều địa chỉ. Order tham chiếu đến `Address` tĩnh, bảo toàn dữ liệu giao hàng kể cả khi User sửa/xóa địa chỉ gốc sau này.
-2. **Product ↔ Inventory**: Không có thao tác `Nhập số lượng = 50` bằng tay, mọi thay đổi số lượng thực tế phải thông qua `WarehouseReceipt` (Nhập thêm) hoặc `CancellationVoucher` (Hủy đi do vỡ/hỏng). Rất sát thực tế vận hành Business.
+---
+
+## 🔌 API Endpoints Summary
+
+- **`/api/user/*`**: Client Auth, Profile settings, List users (Admin only).
+- **`/api/seller/*`**: Admin Dashboard login & authorization middleware checks.
+- **`/api/product/*`** | **`/api/category/*`**: Catalog browsing, filtering, CRUD.
+- **`/api/order/*`**: Order placement, Stripe webhook integration, revenue data extraction.
+- **`/api/warehouse/*`** | **`/api/cancellation/*`**: Inventory logic & document track record.
 
 ---
 
-## 🔌 API Endpoints (Docs Summary)
+## 🚀 Getting Started (Local Setup)
 
-Back-end của dự án cung cấp các nhóm API chia nhỏ rõ rệt:
+### 1. Clone the repository
 
-- **`/api/user/*`**: Luồng Client. Đăng ký, Đăng nhập, Check Auth, Lấy List Users (Cho Admin).
-- **`/api/seller/*`**: Luồng Quản trị. Login, Check Phân quyền Admin.
-- **`/api/product/*`** & **`/api/category/*`**: CRUD Catalog, Gọi lọc Sản phẩm (List, Bestseller).
-- **`/api/order/*`**: Quản lý đặt hàng (COD), Đọc biến động doanh thu (Dashboard), Chuyển trạng thái đơn.
-- **`/api/warehouse/*`** & **`/api/cancellation/*`**: Tạo và xem lịch sử chứng từ kho.
-
----
-
-## 🚀 Hướng dẫn Cài đặt (Local)
-
-**1. Clone dự án & Cài đặt môi trường**
 ```bash
 git clone https://github.com/your-username/GreenCart.git
+cd GreenCart
 ```
 
-**2. Cài đặt Dependencies cho Server & Client**
+### 2. Install Dependencies
+
+You need to install packages for both frontend and backend subdirectories.
+
 ```bash
-cd GreenCart/server && npm install
-cd ../client && npm install
+# Terminal 1 - Backend
+cd server
+npm install
+
+# Terminal 2 - Frontend
+cd client
+npm install
 ```
 
-**3. Khai báo Biến môi trường (`.env`)**
+### 3. Environment Variables Setup
 
-*Tại `server/.env`*
+Create `.env` files in both the `server` and `client` directories based on `.env.example`.
+
+**`server/.env`**
+
 ```env
 PORT=8000
 MONGODB_URI=mongodb+srv://<username>:<password>@cluster.xyz.mongodb.net
-JWT_SECRET=your_secret_string
+JWT_SECRET=your_super_secret_string
 SELLER_EMAIL=admin@example.com
 SELLER_PASSWORD=admin_password
 CLOUDINARY_CLOUD_NAME=xxx
 CLOUDINARY_API_KEY=xxx
 CLOUDINARY_API_SECRET=xxx
+STRIPE_SECRET_KEY=xxx
 ```
 
-*Tại `client/.env`*
+**`client/.env`**
+
 ```env
 VITE_BACKEND_URL=http://localhost:8000
-VITE_CURRENCY=₫
+VITE_CURRENCY=$
 ```
 
-**4. Khởi chạy Ứng dụng**
-Mở 2 Terminal riêng biệt:
+### 4. Run the Application
+
+Start the development servers for both environments concurrently.
+
 ```bash
-# Terminal 1 - Backend (Cổng localhost:8000)
-cd server && npm run dev
+# Terminal 1 - Backend
+cd server
+npm run server
 
-# Terminal 2 - Frontend (Cổng localhost:5173 / Vite)
-cd client && npm run dev
+# Terminal 2 - Frontend (Vite)
+cd client
+npm run dev
 ```
+
+The client will be running at `http://localhost:5173` and the server at `http://localhost:8000`.
 
 ---
-*Dự án GreenCart được tối ưu hóa liên tục để thể hiện tư duy thiết kế phần mềm linh hoạt, an toàn và dễ bảo trì.*
+
+<div align="center">
+  <i>Developed with ❤️. If you find this project helpful or inspiring, please give it a ⭐!</i>
+</div>
