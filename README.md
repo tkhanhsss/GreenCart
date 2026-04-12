@@ -1,107 +1,80 @@
-# 🛒 GreenCart
+# 🛒 GreenCart - Nền tảng Thương mại Điện tử Fullstack (MERN)
 
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
-![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
-![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+<p align="center">
+  <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white" alt="NodeJS" />
+  <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB" alt="Express.js" />
+  <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+  <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="TailwindCSS" />
+</p>
 
-## **Nền tảng thương mại điện tử fullstack hiện đại, xây dựng trên MERN Stack**
-
-## 📋 Mục lục
-
-- [Giới thiệu dự án](#-giới-thiệu-dự-án)
-- [Tính năng nổi bật](#-tính-năng-nổi-bật)
-- [Công nghệ sử dụng](#-công-nghệ-sử-dụng)
-- [Kiến trúc CSDL & Luồng hoạt động](#-kiến-trúc-csdl--luồng-hoạt-động)
-- [API Endpoints](#-api-endpoints)
-- [Hướng dẫn cài đặt](#-hướng-dẫn-cài-đặt)
-- [Biến môi trường](#-biến-môi-trường)
-- [Hướng dẫn sử dụng](#-hướng-dẫn-sử-dụng)
-- [Cấu trúc thư mục](#-cấu-trúc-thư-mục)
+<p align="center">
+  <a href="#-live-demo"><strong>Live Demo</strong></a> ·
+  <a href="#-điểm-nhấn-kỹ-thuật-chính"><strong>Điểm nhấn Kỹ thuật</strong></a> ·
+  <a href="#-kiến-trúc-hệ-thống--cơ-sở-dữ-liệu"><strong>Kiến trúc & CSDL</strong></a> ·
+  <a href="#-hướng-dẫn-cài-đặt-(local)"><strong>Cài đặt</strong></a>
+</p>
 
 ---
 
-## 📖 Giới thiệu dự án
+## 📖 Giới thiệu Dự án
 
-**GreenCart** là ứng dụng thương mại điện tử fullstack với giao diện hiện đại, được xây dựng trên hạ tầng **MERN** (MongoDB, Express, React, Node.js). Hệ thống được thiết kế theo kiến trúc tách biệt Client–Server, tối ưu hai luồng chính: **trải nghiệm mua sắm** cho khách hàng và **quản lý vận hành kho hàng** cho Seller/Admin.
+**GreenCart** là ứng dụng thương mại điện tử fullstack được xây dựng theo kiến trúc RESTful API trên nền tảng **MERN Stack**. Dự án phân tách rõ ràng thành hai luồng trải nghiệm: **Khách hàng (Customer)** mua sắm trực tuyến, và **Trang quản trị (Admin/Seller Dashboard)** giúp quản lý sản phẩm, đơn hàng, kho bãi và theo dõi hiệu suất kinh doanh qua biểu đồ.
 
-| Ứng dụng  | Vai trò | Cổng mặc định |
-| --------- | ------- | ------------- |
-| `client/` | Giao diện mua sắm (Customer) & Bảng điều khiển quản trị (Seller Dashboard) | `http://localhost:5173` |
-| `server/` | API RESTful xử lý toàn bộ logic nghiệp vụ & tương tác Database | `http://localhost:8000` |
+**Mục tiêu xây dựng:** Vận dụng các kiến thức thực tế về thiết kế hệ thống, quản lý state phức tạp trên SPA, và giải quyết các bài toán hóc búa của hệ thống thương mại điện tử như: tránh race condition khi cập nhật tồn kho, bảo mật xác thực (authentication) và xử lý dữ liệu lớn để làm báo cáo.
 
 ---
 
-## ✨ Tính năng nổi bật
+## 🚀 Điểm nhấn Kỹ thuật (Technical Highlights)
+
+Đây là những giải pháp kỹ thuật cốt lõi giúp GreenCart trở thành một ứng dụng ổn định và sẵn sàng mở rộng:
+
+- **Xử lý Đồng thời (Concurrency & Race Conditions):** Sử dụng hàm `bulkWrite` kết hợp toán tử Atomic (`$inc`) trong MongoDB để thực hiện trừ/trả tồn kho. Đảm bảo tính nhất quán dữ liệu (Data Integrity) và ngăn ngừa tình trạng bán vượt mức (Overselling) khi nhiều người dùng cùng thanh toán một lúc.
+- **Tối ưu Tính toán Thống kê (Data Aggregation):** Áp dụng **MongoDB Aggregation Pipelines** phức tạp (`$match`, `$group`, `$project`, `$sort`) để phân tích doanh thu, lợi nhuận gộp theo chu kỳ (7 ngày, 12 tháng), lọc sản phẩm bán chạy/sắp hết hàng. Đẩy toàn bộ tác vụ tính toán nặng xuống Database thay vì xử lý trên Node.js Thread Pool.
+- **Cơ chế Nhập/Hủy Kho Thực tế:** Xây dựng tính năng quản lý kho bài bản bằng **Phiếu Nhập (Warehouse Receipt)** và **Phiếu Hủy (Cancellation Voucher)**. Tồn kho biến động dựa trên các chứng từ này thay vì Admin tự sửa số. Hệ thống tính toán chính xác giá vốn trung bình và trừ hao phí tổn thất để ra báo cáo lợi nhuận thực tế.
+- **Bảo mật & Xác thực Hai Phân Hệ:** Cấp phát phân quyền JWT độc lập giữa `User` và `Seller`. Token được đóng gói an toàn trong **HTTP-Only Cookies**, triệt tiêu nguy cơ bị tấn công XSS. Thiết lập Axios Interceptors toàn cục tại Client để bắt lỗi 401/403, tự động điều hướng và xóa state khi phiên hết hạn.
+- **Tối ưu Trải nghiệm CSDL Address:** Sử dụng cấu trúc thông minh cho Sổ địa chỉ người dùng theo chuẩn sát nhập hành chính tại VN (chia cấp Tỉnh/Thành phố & Phường/Xã), bóc tách thành một bảng `Address` riêng biệt và dùng cơ chế `ref` trong Order thay vì nhúng tĩnh.
+
+---
+
+## 📸 Giao diện Trực quan
+
+| Trải nghiệm Khách hàng (Customer Portal) | Trang Quản trị viên (Admin Dashboard) |
+| :---: | :---: |
+| ![Khách hàng](./client/src/assets/Customer.png) | ![Admin](./client/src/assets/Admin.png) |
+
+---
+
+## ✨ Tính năng Nổi bật
 
 ### 🛍 Khách hàng (Customer Portal)
+- Xác thực đăng nhập qua mật khẩu băm bằng **Bcrypt**, giỏ hàng tự động đồng bộ thời gian thực.
+- **Sổ địa chỉ thông minh:** Quản lý nhiều địa chỉ giao hàng, tích hợp API Open API VN để chọn Tỉnh/Thành & Phường/Xã với logic sắp xếp chữ cái tiếng Việt.
+- Cơ chế Giỏ hàng (Cart) linh hoạt, hỗ trợ cộng dồn, tự động tính thuế suất và quy đổi để thanh toán COD.
+- Theo dõi tiến độ vận chuyển đơn hàng 5 trạng thái chuyên nghiệp (*Placed → Packing → Shipped → Out for Delivery → Delivered / Cancelled*).
 
-- **Xác thực tài khoản**: Đăng ký / Đăng nhập qua JWT Token lưu trong HTTP-Only Cookie, mật khẩu được băm bằng Bcrypt. Hệ thống tự động phát hiện tài khoản bị khóa và force-logout qua Axios interceptor + polling mỗi 30 giây.
-- **Sổ địa chỉ**: Lưu nhiều địa chỉ giao hàng theo cấu trúc **Phường/Xã + Tỉnh/Thành phố** (2 cấp, theo địa chỉ hành chính sau sát nhập). Danh sách Tỉnh/Thành và Phường/Xã được lấy từ API `provinces.open-api.vn` và sắp xếp theo bảng chữ cái tiếng Việt.
-- **Duyệt sản phẩm**: Phân loại theo danh mục (Category), trang chi tiết sản phẩm, hiển thị BestSeller dựa trên dữ liệu bán hàng thực tế (MongoDB Aggregation).
-- **Giỏ hàng**: Thêm/bớt/xóa sản phẩm, đồng bộ real-time giữa Client State và Database. Tự động tính `Subtotal`, thuế 2%, và `Total`.
-- **Đặt hàng COD**: Checkout với phương thức thanh toán khi nhận hàng. Thuế được tính phía Server để chống gian lận. Tồn kho được trừ bằng `bulkWrite` với `$inc` đảm bảo tính nguyên tử.
-- **Theo dõi đơn hàng**: Xem lịch sử đơn và trạng thái vận chuyển (_Order Placed → Packing → Shipped → Out for Delivery → Delivered / Cancelled_).
-
-### 🔧 Seller / Admin Dashboard
-
-- **Phân quyền riêng biệt**: Đăng nhập Admin qua đường dẫn `/seller`, xác thực bằng JWT Cookie riêng (`sellerToken`), kiểm tra qua middleware `authSeller`.
-- **Quản lý sản phẩm**: Thêm sản phẩm với upload nhiều ảnh lên Cloudinary (qua Multer), chỉnh sửa giá gốc & giá khuyến mãi, xóa sản phẩm.
-- **Quản lý danh mục**: Thêm/xóa Category với ảnh đại diện.
-- **Phiếu nhập kho (Warehouse Receipt)**:
-  - Tạo phiếu với mã tự sinh: `IR-YYYYMMDD-XXX`.
-  - Ghi nhận giá vốn (`unitCost`) cho từng sản phẩm, tự động cộng tồn kho.
-- **Phiếu hủy hàng (Cancellation Voucher)**:
-  - Tạo phiếu với mã tự sinh: `CV-YYYYMMDD-XXX`.
-  - Phân loại lý do hủy: Damaged, Lost, Expired, Other.
-  - Tự động trừ tồn kho bằng `bulkWrite` mà không tạo ghi nhận doanh thu.
-- **Quản lý đơn hàng**: Cập nhật trạng thái đơn. Khi đơn bị hủy (Cancelled), tồn kho được hoàn trả; khi khôi phục từ Cancelled, hệ thống kiểm tra tồn kho trước khi trừ lại.
-- **Dashboard phân tích**:
-  - Tổng quan: Doanh thu, Số đơn, Số sản phẩm, Số người dùng, Sản phẩm sắp hết hàng (`quantity ≤ 5`).
-  - Biểu đồ doanh thu & lợi nhuận 7 ngày gần nhất.
-  - Biểu đồ doanh thu & lợi nhuận theo 12 tháng (có thể chọn năm).
-  - Lợi nhuận gộp = Doanh thu − Vốn nhập − Tổn thất hủy hàng.
-  - Toàn bộ tính toán dùng MongoDB Aggregate Pipelines.
-- **Quản lý người dùng**: Danh sách tài khoản (phân trang), khóa/mở khóa tài khoản (soft-delete toggle).
+### 🔧 Quản trị viên (Admin/Seller Dashboard)
+- **Kiểm soát Sản phẩm & Danh mục:** CRUD với hình ảnh đẩy trực tiếp lên Cloud CDN (**Cloudinary**) thông qua Middleware **Multer**.
+- **Quản trị Đơn hàng:** Đồng bộ trạng thái giao hàng, tự động hoàn trả số lượng (Refund Stock) cực kỳ an toàn nếu đơn chuyển sang trạng thái "Cancelled".
+- **Biểu đồ thời gian thực:** Cung cấp biểu đồ trực quan (Recharts / Chart.js) trực tiếp từ API Aggregation.
+- Quản lý tài khoản: Chức năng khóa người dùng (Soft-delete/Ban) cập nhật cưỡng chế ngắt kết nối User đang online.
 
 ---
 
-## 🛠 Công nghệ sử dụng
+## 🛠 Công nghệ Sử dụng
 
-### Frontend (Client)
-
-| Công nghệ | Phiên bản | Vai trò |
-| --- | --- | --- |
-| **React** | 19 | Thư viện UI component-based |
-| **Vite** | 6 | Build tool với Hot Module Replacement |
-| **React Router DOM** | 7 | Client-side routing (SPA) |
-| **Tailwind CSS** | 4 | Utility-first CSS framework |
-| **Axios** | 1.x | HTTP client gọi API |
-| **React Hot Toast** | 2.x | Thông báo toast UI |
-| **React Icons** | 5.x | Bộ icon SVG |
-
-### Backend (Server)
-
-| Công nghệ | Phiên bản | Vai trò |
-| --- | --- | --- |
-| **Node.js** | ≥ 18 | Runtime JavaScript |
-| **Express** | 5 | Web framework & routing |
-| **Mongoose** | 9 | ODM cho MongoDB |
-| **JWT (jsonwebtoken)** | 9 | Tạo & xác thực token |
-| **Bcryptjs** | 3 | Băm mật khẩu |
-| **Cloudinary** | 2 | CDN lưu trữ ảnh sản phẩm |
-| **Multer** | 2 | Middleware upload file |
-| **Cookie-Parser** | 1.x | Parse HTTP cookies |
-| **CORS** | 2.x | Cross-Origin Resource Sharing |
-| **Nodemon** | 3.x | Auto-reload khi phát triển |
+| Frontend (Client) | Backend (Server) | Database & Khác |
+| ----------------- | ---------------- | --------------- |
+| React 19 (Vite)   | Node.js ≥ 18     | MongoDB / Mongoose 9 |
+| React Router v7   | Express.js 5     | Cloudinary (Image CDN) |
+| Tailwind CSS 4    | JWT Auth         | Render / Vercel (CI/CD) |
+| Axios / React Hot Toast | Bcryptjs / Mutler | GitHub Actions |
 
 ---
 
-## 🏗 Kiến trúc CSDL & Luồng hoạt động
+## 🏗 Kiến trúc Hệ thống & Cơ sở dữ liệu
 
-### Sơ đồ quan hệ Data Models
-
+**Mô hình Dữ liệu Chính:**
 ```mermaid
 erDiagram
     User ||--o{ Address : "1:N"
@@ -113,386 +86,85 @@ erDiagram
     CancellationVoucher }o--|{ Product : "items[]"
 
     User {
-        string name
         string email
         string password
-        object cartItems
         boolean isDeleted
     }
-
-    Address {
-        string userId
-        string firstName
-        string lastName
-        string email
-        string street
-        string ward
-        string city
-        string phone
-    }
-
     Product {
         string name
-        array description
         number price
-        number offerPrice
-        array images
         ObjectId category
         number quantity
     }
-
-    Category {
-        string name
-        string image
-    }
-
     Order {
         ObjectId userId
         array items
         number amount
-        ObjectId address
         string status
-        string paymentType
         boolean isPaid
     }
-
-    WarehouseReceipt {
-        string receiptCode
-        array items
-        number totalCost
-        string note
-    }
-
-    CancellationVoucher {
-        string voucherCode
-        array items
-        string note
-        string status
-    }
 ```
 
-### Mô tả quan hệ
-
-1. **User ↔ Address**: Mỗi User (1) có thể có nhiều Address (N). Địa chỉ gồm 2 cấp hành chính: `ward` (Phường/Xã) + `city` (Tỉnh/Thành phố), phù hợp với cấu trúc địa giới hành chính Việt Nam sau sát nhập.
-2. **Product ↔ Category**: Nhiều Product thuộc 1 Category. Tồn kho (`quantity`) được cập nhật bằng Atomic Operation `$inc` để tránh race condition.
-3. **Order**: Lưu tham chiếu (`ref`) đến Address và Product tại thời điểm đặt hàng. Hỗ trợ populate khi truy vấn.
-4. **WarehouseReceipt**: Ghi nhận nhập kho — mỗi item có `unitCost` (giá vốn) và `quantity`. Tự động cộng vào tồn kho Product.
-5. **CancellationVoucher**: Ghi nhận hủy hàng lỗi/hỏng — trừ trực tiếp vào tồn kho. Dùng để tính tổn thất trong Dashboard.
-
-### Sơ đồ luồng ứng dụng
-
-```mermaid
-graph TD
-    Cust([Khách Hàng]) -->|Duyệt sản phẩm, Đặt hàng COD| Client[Frontend - React 19 + Vite]
-    Admin([Seller / Admin]) -->|Dashboard, Nhập kho, Hủy kho| Client
-    Client -- "HTTP Requests qua Axios" --> Server[Backend - Express 5 API]
-
-    Server --> AuthUser[authUser - JWT userToken]
-    Server --> AuthSeller[authSeller - JWT sellerToken]
-    Server --> MulterUpload[Multer - File Upload]
-
-    AuthUser --> Control[Controllers]
-    AuthSeller --> Control
-    MulterUpload --> Control
-
-    Control -->|CRUD & bulkWrite| DB[(MongoDB + Mongoose 9)]
-    Control -->|Upload ảnh| Cloud[Cloudinary CDN]
-
-    subgraph Data Models
-        DB --> U[User & Address]
-        DB --> O[Order]
-        DB --> P[Product & Category]
-        DB --> W[WarehouseReceipt & CancellationVoucher]
-    end
-```
+**Mô tả Luồng Thiết kế:**
+1. **User ↔ Address**: Mỗi KH có nhiều địa chỉ. Order tham chiếu đến `Address` tĩnh, bảo toàn dữ liệu giao hàng kể cả khi User sửa/xóa địa chỉ gốc sau này.
+2. **Product ↔ Inventory**: Không có thao tác `Nhập số lượng = 50` bằng tay, mọi thay đổi số lượng thực tế phải thông qua `WarehouseReceipt` (Nhập thêm) hoặc `CancellationVoucher` (Hủy đi do vỡ/hỏng). Rất sát thực tế vận hành Business.
 
 ---
 
-## 🔌 API Endpoints
+## 🔌 API Endpoints (Docs Summary)
 
-### User (`/api/user`)
+Back-end của dự án cung cấp các nhóm API chia nhỏ rõ rệt:
 
-| Method | Endpoint | Auth | Mô tả |
-| --- | --- | --- | --- |
-| `POST` | `/register` | — | Đăng ký tài khoản |
-| `POST` | `/login` | — | Đăng nhập |
-| `GET` | `/is-auth` | `authUser` | Kiểm tra trạng thái đăng nhập |
-| `GET` | `/logout` | — | Đăng xuất |
-| `GET` | `/admin/users` | `authSeller` | Danh sách người dùng (phân trang) |
-| `POST` | `/admin/toggle-delete/:id` | `authSeller` | Khóa/mở khóa tài khoản |
-
-### Seller (`/api/seller`)
-
-| Method | Endpoint | Auth | Mô tả |
-| --- | --- | --- | --- |
-| `POST` | `/login` | — | Đăng nhập Admin |
-| `GET` | `/is-auth` | `authSeller` | Kiểm tra quyền Admin |
-| `GET` | `/logout` | — | Đăng xuất Admin |
-
-### Product (`/api/product`)
-
-| Method | Endpoint | Auth | Mô tả |
-| --- | --- | --- | --- |
-| `POST` | `/add` | `authSeller` | Thêm sản phẩm (kèm upload ảnh) |
-| `GET` | `/list` | — | Danh sách tất cả sản phẩm |
-| `GET` | `/best-sellers` | — | Sản phẩm bán chạy (Aggregation) |
-| `GET` | `/id` | — | Chi tiết sản phẩm theo ID |
-| `POST` | `/price` | `authSeller` | Cập nhật giá |
-| `POST` | `/delete` | `authSeller` | Xóa sản phẩm |
-
-### Category (`/api/category`)
-
-| Method | Endpoint | Auth | Mô tả |
-| --- | --- | --- | --- |
-| `POST` | `/add` | `authSeller` | Thêm danh mục (kèm upload ảnh) |
-| `GET` | `/list` | — | Danh sách danh mục |
-| `POST` | `/remove` | `authSeller` | Xóa danh mục |
-
-### Address (`/api/address`)
-
-| Method | Endpoint | Auth | Mô tả |
-| --- | --- | --- | --- |
-| `POST` | `/add` | `authUser` | Thêm địa chỉ giao hàng |
-| `GET` | `/get` | `authUser` | Lấy danh sách địa chỉ |
-
-### Cart (`/api/cart`)
-
-| Method | Endpoint | Auth | Mô tả |
-| --- | --- | --- | --- |
-| `POST` | `/update` | `authUser` | Đồng bộ giỏ hàng lên DB |
-
-### Order (`/api/order`)
-
-| Method | Endpoint | Auth | Mô tả |
-| --- | --- | --- | --- |
-| `POST` | `/cod` | `authUser` | Đặt hàng COD |
-| `GET` | `/user` | `authUser` | Danh sách đơn hàng của user |
-| `GET` | `/seller` | `authSeller` | Tất cả đơn hàng (phân trang) |
-| `POST` | `/status` | `authSeller` | Cập nhật trạng thái đơn |
-| `GET` | `/dashboard` | `authSeller` | Thống kê Dashboard |
-
-### Warehouse (`/api/warehouse`)
-
-| Method | Endpoint | Auth | Mô tả |
-| --- | --- | --- | --- |
-| `POST` | `/receipt` | `authSeller` | Tạo phiếu nhập kho |
-| `GET` | `/receipts` | `authSeller` | Danh sách phiếu nhập (phân trang) |
-
-### Cancellation (`/api/cancellation`)
-
-| Method | Endpoint | Auth | Mô tả |
-| --- | --- | --- | --- |
-| `POST` | `/voucher` | `authSeller` | Tạo phiếu hủy hàng |
-| `GET` | `/vouchers` | `authSeller` | Danh sách phiếu hủy |
+- **`/api/user/*`**: Luồng Client. Đăng ký, Đăng nhập, Check Auth, Lấy List Users (Cho Admin).
+- **`/api/seller/*`**: Luồng Quản trị. Login, Check Phân quyền Admin.
+- **`/api/product/*`** & **`/api/category/*`**: CRUD Catalog, Gọi lọc Sản phẩm (List, Bestseller).
+- **`/api/order/*`**: Quản lý đặt hàng (COD), Đọc biến động doanh thu (Dashboard), Chuyển trạng thái đơn.
+- **`/api/warehouse/*`** & **`/api/cancellation/*`**: Tạo và xem lịch sử chứng từ kho.
 
 ---
 
-## 🚀 Hướng dẫn cài đặt
+## 🚀 Hướng dẫn Cài đặt (Local)
 
-### Yêu cầu hệ thống
-
-- **Node.js** >= 18.x
-- **MongoDB** — Local hoặc MongoDB Atlas (Cloud)
-- **Cloudinary** — Tài khoản để upload ảnh sản phẩm
-
-### Các bước cài đặt
-
-**1. Clone dự án**
-
+**1. Clone dự án & Cài đặt môi trường**
 ```bash
 git clone https://github.com/your-username/GreenCart.git
-cd GreenCart
 ```
 
-**2. Cài đặt dependencies**
-
+**2. Cài đặt Dependencies cho Server & Client**
 ```bash
-# Terminal 1 — Server
-cd server
-npm install
-
-# Terminal 2 — Client
-cd ../client
-npm install
+cd GreenCart/server && npm install
+cd ../client && npm install
 ```
 
-**3. Cấu hình biến môi trường**
+**3. Khai báo Biến môi trường (`.env`)**
 
-Tạo file `.env` trong thư mục `server/` (xem chi tiết tại phần [Biến môi trường](#-biến-môi-trường)).
-
-Tạo file `.env` trong thư mục `client/` với nội dung:
-
+*Tại `server/.env`*
 ```env
-VITE_BACKEND_URL=http://localhost:8000
-VITE_CURRENCY=$
-```
-
-**4. Khởi chạy**
-
-```bash
-# Terminal 1 — Backend (Port mặc định 8000, auto-reload với Nodemon)
-cd server
-npm run server
-
-# Terminal 2 — Frontend (Port 5173, Vite dev server)
-cd client
-npm run dev
-```
-
----
-
-## 🔐 Biến môi trường
-
-### Server (`server/.env`)
-
-```env
-# Cổng API (mặc định 8000 nếu không đặt)
 PORT=8000
-
-# MongoDB connection string (database name "greencart" được nối tự động trong db.js)
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net
-
-# JWT Secret key
-JWT_SECRET=your_jwt_secret_key
-
-# Tài khoản Seller/Admin
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster.xyz.mongodb.net
+JWT_SECRET=your_secret_string
 SELLER_EMAIL=admin@example.com
-SELLER_PASSWORD=your_admin_password
-
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+SELLER_PASSWORD=admin_password
+CLOUDINARY_CLOUD_NAME=xxx
+CLOUDINARY_API_KEY=xxx
+CLOUDINARY_API_SECRET=xxx
 ```
 
-### Client (`client/.env`)
-
+*Tại `client/.env`*
 ```env
 VITE_BACKEND_URL=http://localhost:8000
-VITE_CURRENCY=$
+VITE_CURRENCY=₫
+```
+
+**4. Khởi chạy Ứng dụng**
+Mở 2 Terminal riêng biệt:
+```bash
+# Terminal 1 - Backend (Cổng localhost:8000)
+cd server && npm run dev
+
+# Terminal 2 - Frontend (Cổng localhost:5173 / Vite)
+cd client && npm run dev
 ```
 
 ---
-
-## 💻 Hướng dẫn sử dụng
-
-| Giao diện | URL | Ghi chú |
-| --- | --- | --- |
-| **Khách hàng** | `http://localhost:5173` | Trang chủ, duyệt sản phẩm, giỏ hàng, đặt hàng |
-| **Seller Dashboard** | `http://localhost:5173/seller` | Yêu cầu đăng nhập Admin (email + password từ `.env`) |
-| **API Server** | `http://localhost:8000` | RESTful API (không có giao diện) |
-
-### Các trang Customer
-
-| Route | Trang | Mô tả |
-| --- | --- | --- |
-| `/` | Home | Trang chủ — Banner, Categories, BestSeller |
-| `/products` | All Products | Toàn bộ sản phẩm |
-| `/products/:category` | Product Category | Sản phẩm theo danh mục |
-| `/products/:category/:id` | Product Details | Chi tiết sản phẩm |
-| `/cart` | Cart | Giỏ hàng & Checkout |
-| `/add-address` | Add Address | Thêm địa chỉ giao hàng |
-| `/my-orders` | My Orders | Lịch sử đơn hàng |
-
-### Các trang Seller Dashboard
-
-| Route | Trang | Mô tả |
-| --- | --- | --- |
-| `/seller` | Dashboard | Thống kê tổng quan, biểu đồ |
-| `/seller/add-product` | Add Product | Thêm sản phẩm mới |
-| `/seller/product-list` | Product List | Quản lý danh sách sản phẩm |
-| `/seller/orders` | Orders | Quản lý đơn hàng |
-| `/seller/users` | Users | Quản lý tài khoản người dùng |
-| `/seller/categories` | Categories | Quản lý danh mục |
-| `/seller/stock-import` | Stock Import | Nhập kho (Warehouse Receipt) |
-| `/seller/cancellation-voucher` | Cancellation Voucher | Phiếu hủy hàng |
-
----
-
-## 📂 Cấu trúc thư mục
-
-```text
-GreenCart/
-│
-├── client/                          # Frontend Application
-│   ├── src/
-│   │   ├── assets/                 # Ảnh, icon, dữ liệu tĩnh (vietnamProvinces.js)
-│   │   ├── components/             # Component dùng chung
-│   │   │   ├── Navbar.jsx          # Thanh điều hướng chính
-│   │   │   ├── Footer.jsx          # Footer
-│   │   │   ├── Login.jsx           # Modal đăng nhập/đăng ký
-│   │   │   ├── ProductCart.jsx     # Card sản phẩm
-│   │   │   ├── MainBanner.jsx      # Banner trang chủ
-│   │   │   ├── Categories.jsx      # Hiển thị danh mục
-│   │   │   ├── BestSeller.jsx      # Sản phẩm bán chạy
-│   │   │   ├── BottomBanner.jsx    # Banner phụ
-│   │   │   └── seller/
-│   │   │       └── SellerLogin.jsx # Form đăng nhập Admin
-│   │   ├── context/
-│   │   │   └── AppContext.jsx      # Global state (User, Cart, Products, Auth)
-│   │   ├── pages/
-│   │   │   ├── Home.jsx            # Trang chủ
-│   │   │   ├── AllProducts.jsx     # Tất cả sản phẩm
-│   │   │   ├── ProductCategory.jsx # Sản phẩm theo danh mục
-│   │   │   ├── ProductDetails.jsx  # Chi tiết sản phẩm
-│   │   │   ├── Cart.jsx            # Giỏ hàng & Checkout
-│   │   │   ├── AddAddress.jsx      # Thêm địa chỉ (ward + city)
-│   │   │   ├── MyOrders.jsx        # Lịch sử đơn hàng
-│   │   │   └── seller/
-│   │   │       ├── SellerLayout.jsx     # Layout + Sidebar
-│   │   │       ├── Dashboard.jsx        # Thống kê & Biểu đồ
-│   │   │       ├── AddProduct.jsx       # Thêm sản phẩm
-│   │   │       ├── ProductList.jsx      # Danh sách sản phẩm
-│   │   │       ├── Orders.jsx           # Quản lý đơn hàng
-│   │   │       ├── Users.jsx            # Quản lý người dùng
-│   │   │       ├── Categories.jsx       # Quản lý danh mục
-│   │   │       ├── StockImport.jsx      # Phiếu nhập kho
-│   │   │       └── CancellationVoucher.jsx  # Phiếu hủy hàng
-│   │   ├── App.jsx                 # Root component & Routing
-│   │   ├── main.jsx                # Entry point
-│   │   └── index.css               # Global styles
-│   ├── package.json
-│   └── vite.config.js
-│
-├── server/                          # Backend API
-│   ├── configs/
-│   │   ├── db.js                   # Kết nối MongoDB
-│   │   ├── cloudinary.js           # Cấu hình Cloudinary
-│   │   └── cookieOptions.js        # Cấu hình Cookie (httpOnly, secure, sameSite)
-│   ├── controllers/
-│   │   ├── userController.js       # Auth (register, login, logout) + Admin user management
-│   │   ├── sellerController.js     # Auth Admin (login, logout, is-auth)
-│   │   ├── productController.js    # CRUD sản phẩm + BestSeller aggregation
-│   │   ├── categoryController.js   # CRUD danh mục
-│   │   ├── cartController.js       # Đồng bộ giỏ hàng
-│   │   ├── addressController.js    # CRUD địa chỉ
-│   │   ├── orderController.js      # Đặt hàng, cập nhật trạng thái, Dashboard stats
-│   │   ├── warehouseController.js  # Phiếu nhập kho
-│   │   └── cancellationController.js  # Phiếu hủy hàng
-│   ├── middlewares/
-│   │   ├── authUser.js             # Xác thực JWT user + kiểm tra soft-delete
-│   │   ├── authSeller.js           # Xác thực JWT seller
-│   │   └── multer.js               # Cấu hình upload file
-│   ├── models/
-│   │   ├── User.js                 # Schema User (name, email, password, cartItems, isDeleted)
-│   │   ├── Address.js              # Schema Address (street, ward, city — 2 cấp hành chính)
-│   │   ├── Product.js              # Schema Product (name, price, offerPrice, quantity, category)
-│   │   ├── Category.js             # Schema Category (name, image)
-│   │   ├── Order.js                # Schema Order (items, address ref, status, paymentType)
-│   │   ├── WarehouseReceipt.js     # Schema Phiếu nhập (receiptCode IR-xxx, items, totalCost)
-│   │   └── CancellationVoucher.js  # Schema Phiếu hủy (voucherCode CV-xxx, items, reason)
-│   ├── routes/
-│   │   ├── userRoute.js
-│   │   ├── sellerRoute.js
-│   │   ├── productRoute.js
-│   │   ├── categoryRoute.js
-│   │   ├── cartRoute.js
-│   │   ├── addressRoute.js
-│   │   ├── orderRoute.js
-│   │   ├── warehouseRoute.js
-│   │   └── cancellationRoute.js
-│   ├── server.js                    # Entry point — Express app khởi tạo
-│   └── package.json
-│
-└── README.md
-```
+*Dự án GreenCart được tối ưu hóa liên tục để thể hiện tư duy thiết kế phần mềm linh hoạt, an toàn và dễ bảo trì.*
