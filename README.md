@@ -10,7 +10,6 @@
     <img src="https://img.shields.io/badge/Express.js_5-404D59?style=for-the-badge&logo=express&logoColor=61DAFB" alt="Express" />
     <img src="https://img.shields.io/badge/MongoDB_9-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
     <img src="https://img.shields.io/badge/Tailwind_CSS_4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
-    <img src="https://img.shields.io/badge/Stripe-626CD9?style=for-the-badge&logo=Stripe&logoColor=white" alt="Stripe" />
   </p>
   
   <!-- <a href="#-live-demo"><strong>Live Demo</strong></a> · -->
@@ -29,7 +28,7 @@
 
 ---
 
-## 🚀 Technical Highlights & Architecture (Recommended for Reviewers)
+## 🚀 System Architecture & Technical Highlights
 
 This project tackles several complex backend and database design challenges:
 
@@ -74,7 +73,7 @@ Rather than editing the "Stock Quantity" directly (which leads to data inconsist
 ### 🛍️ Customer Portal
 
 - **Authentication:** Secure registration & login via Bcrypt hashing.
-- **Smart Checkout:** Synchronized shopping cart, automatic price & shipping fee calculation, COD & **Stripe** payment integration.
+- **Smart Checkout:** Synchronized shopping cart, real-time price & shipping fee calculation, supporting COD (Cash on Delivery) workflow.
 - **Address Book Management:** Users can manage multiple shipping addresses via a normalized structural format (integrated with API for real-time validation).
 - **Order Tracking:** 5-tier dynamic workflow (`Placed` → `Packing` → `Shipped` → `Out for Delivery` → `Delivered / Cancelled`).
 
@@ -93,8 +92,8 @@ Rather than editing the "Stock Quantity" directly (which leads to data inconsist
 | ----------------------- | ------------------- | ------------------------------ |
 | **React 19** (Vite)     | **Node.js 18+**     | **MongoDB / Mongoose 9**       |
 | **React Router v7**     | **Express.js 5**    | **Cloudinary** (Image CDN)     |
-| **Tailwind CSS 4**      | **JWT** (HTTP-Only) | **Stripe API** (Payments)      |
-| Axios, Hot Toast, Icons | Bcrypt.js, Multer   | Render / Vercel (CI/CD Deploy) |
+| **Tailwind CSS 4**      | **JWT** (HTTP-Only) | Render / Vercel (CI/CD)        |
+| Axios, Hot Toast, Icons | Bcrypt.js, Multer   | RESTful API Design             |
 
 ---
 
@@ -136,7 +135,7 @@ erDiagram
 - **`/api/user/*`**: Client Auth, Profile settings, List users (Admin only).
 - **`/api/seller/*`**: Admin Dashboard login & authorization middleware checks.
 - **`/api/product/*`** | **`/api/category/*`**: Catalog browsing, filtering, CRUD.
-- **`/api/order/*`**: Order placement, Stripe webhook integration, revenue data extraction.
+- **`/api/order/*`**: Order placement, fulfillment lifecycle handling, and revenue data extraction.
 - **`/api/warehouse/*`** | **`/api/cancellation/*`**: Inventory logic & document track record.
 
 ---
@@ -179,7 +178,6 @@ SELLER_PASSWORD=admin_password
 CLOUDINARY_CLOUD_NAME=xxx
 CLOUDINARY_API_KEY=xxx
 CLOUDINARY_API_SECRET=xxx
-STRIPE_SECRET_KEY=xxx
 ```
 
 **`client/.env`**
